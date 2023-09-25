@@ -18,9 +18,9 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
 	title: 'DevFlow',
-	description: 'a community-driven platform for asking and answering questions about programming get help,share knowlage and colloborate with developers from around  the world ',
+	description: 'a community-driven platform for asking and answering questions about programming get help,share kwnolage and colloborate with developers from around  the world ',
 	icons: {
-		icon: '/assets/images/site-logo.svg',
+		icon: '/favicon.ico',
 	},
 };
 
