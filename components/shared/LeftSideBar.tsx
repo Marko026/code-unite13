@@ -11,7 +11,7 @@ import { useClerk } from "@clerk/clerk-react";
 const LeftSideBar = () => {
   const pathname = usePathname();
   const { signOut } = useClerk();
-  const { userId, isSignedIn } = useAuth();
+  const { isSignedIn } = useAuth();
 
   return (
     <section className=" background-light900_dark200 custom-scrollbar sticky left-0 top-0 hidden h-screen overflow-y-auto border-r-[1px] px-8  dark:border-transparent  md:flex md:flex-col lg:w-[266px]">

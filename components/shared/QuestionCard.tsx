@@ -1,72 +1,80 @@
 import React from "react";
 import RenderTag from "./RenderTag";
-import Image from "next/image";
+import Link from "next/link";
+import Metric from "./Metric";
+import { formatNumberWithExtension, getTimestamp } from "@/lib/utils";
 
 interface QuestionCardProps {
+  _id: number;
   title: string;
-  votes: number;
-  answers: number;
+  tags: { _id: number; name: string }[];
+  author: {
+    _id: number;
+    name: string;
+    picture: string;
+  };
+  upvotes: number;
   views: number;
-  user: string;
-  time: string;
+  answers: Array<object>;
+  createdAt: Date;
 }
-
 const QuestionCard = ({
   title,
-  votes,
+  tags,
+  upvotes,
   answers,
   views,
-  user,
-  time,
+  author,
+  createdAt,
+  _id,
 }: QuestionCardProps) => {
   return (
-    <section className="background-light800_darkgradient mt-8 flex flex-col space-y-6 rounded-xl p-9 shadow-md">
-      <h3 className="h3-bold text-dark200_light900 line-clamp-1">{title}</h3>
-      <RenderTag name="nextjs" />
-      <div className="  flex flex-wrap items-center justify-between gap-2">
-        <div className="text-dark400_light700 flex items-center">
-          <Image
-            src="assets/images/site-logo.svg"
-            alt="logo"
-            className="mr-2 rounded-full"
-            width={20}
-            height={20}
-          />
-          <p className=" flex items-center text-[14px]">
-            {user} <span className="mx-1">|</span>
-          </p>
-          <p>{time}</p>
-        </div>
-        <div className="text-dark400_light700 flex  space-x-3 ">
-          <div className="flex space-x-1">
-            <Image
-              src="/assets/icons/like.svg"
-              width={16}
-              height={16}
-              alt="like"
-            />
-            <p className="text-[12px] capitalize">{votes} Votes</p>
-          </div>
-          <div className="flex space-x-1">
-            <Image
-              src="/assets/icons/like.svg"
-              width={16}
-              height={16}
-              alt="like"
-            />
-            <p className="text-[12px] capitalize">{answers} Answers</p>
-          </div>
-          <div className="flex space-x-1">
-            <Image
-              src="/assets/icons/like.svg"
-              width={16}
-              height={16}
-              alt="like"
-            />
-            <p className="text-[12px] capitalize">{views} Views</p>
-          </div>
-        </div>
+    <section className="background-light800_darkgradient mt-8 flex w-full flex-col space-y-6 rounded-xl p-9 shadow-md">
+      <span className="subtle-regular text-dark400_light700 hidden max-md:block">
+        {getTimestamp(createdAt)}
+      </span>
+      <Link href={`/question/${_id} `}>
+        <h3 className="h3-bold text-dark200_light900 line-clamp-1">{title}</h3>
+      </Link>
+      <div className="flex flex-wrap gap-2">
+        {tags.map((tag) => (
+          <RenderTag _id={tag._id} key={tag._id} name={tag.name} />
+        ))}
       </div>
+      <div className=" flex flex-wrap items-center justify-between gap-2">
+        <Metric
+          imgUrl="/assets/icons/avatar.svg"
+          alt="user"
+          value={author.name}
+          title={`-asked ${getTimestamp(createdAt)}`}
+          href={`/profile/${author._id}`}
+          isAuthor
+          textStyles="body-meduim text-dark400_light700"
+        />
+        <Metric
+          imgUrl="/assets/icons/like.svg"
+          alt="upvotes"
+          value={formatNumberWithExtension(upvotes)}
+          title="Votes"
+          textStyles="small-meduim text-dark400_light800"
+        />
+        <Metric
+          imgUrl="/assets/icons/message.svg"
+          alt="answers"
+          value={formatNumberWithExtension(answers.length)}
+          title="Answers"
+          textStyles="small-meduim text-dark400_light800"
+        />
+        <Metric
+          imgUrl="/assets/icons/eye.svg"
+          alt="views"
+          value={formatNumberWithExtension(views)}
+          title="Views"
+          textStyles="small-meduim text-dark400_light800"
+        />
+      </div>
+
+      {/* to do if sign in add edit delete actions  */}
     </section>
   );
 };

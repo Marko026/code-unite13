@@ -5,8 +5,12 @@ import Link from "next/link";
 import { HomePageFilters } from "@/constants/filters";
 import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/shared/QuestionCard";
+import NoResult from "@/components/shared/NoResult";
+import { getQuestions } from "@/lib/actions/questions.actions";
 
-export default function Home() {
+export default async function Home() {
+  const result = await getQuestions({});
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center ">
@@ -31,14 +35,30 @@ export default function Home() {
           containerClasses="hidden  max-md:block max-md:w-full sm:w-[40%] "
         />
         <HomeFilters />
-        <QuestionCard
-          title="Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?"
-          votes={10}
-          answers={5}
-          views={100}
-          user="John Doe"
-          time="asked 20 days ago"
-        />
+
+        {result.questions.length > 0 ? (
+          result.questions.map((question, index) => (
+            <QuestionCard
+              key={question._id}
+              _id={question._id}
+              title={question.title}
+              tags={question.tags}
+              upvotes={question.upvotes}
+              answers={question.answers}
+              views={question.views}
+              author={question.author}
+              createdAt={question.createdAt}
+            />
+          ))
+        ) : (
+          <NoResult
+            title="question"
+            desc="  Be the first to break the silence! Ask a Questions and kickstart the
+          discussion.Our query resolution rate is 100% on all the questions asked."
+            link="/ask-question"
+            linkTitle="Ask Question"
+          />
+        )}
       </div>
     </>
   );
