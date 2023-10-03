@@ -28,7 +28,7 @@ const NoResult = ({ title, desc, link, linkTitle }: NoResultProps) => {
         className="hidden object-contain dark:block"
       />
       <h2 className="h2-bold text-dark200_light900 mt-8">
-        There's no {title} to show
+        There&apos;s no {title} to show
       </h2>
       <p className="body-regular text-dark500_light700 my-3.5 max-w-md text-center">
         {desc}
