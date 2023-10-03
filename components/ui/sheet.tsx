@@ -4,8 +4,13 @@ import * as React from "react";
 import * as SheetPrimitive from "@radix-ui/react-dialog";
 import { cva, type VariantProps } from "class-variance-authority";
 import { X } from "lucide-react";
+import { HTMLAttributes } from "react";
+import { DialogPortalProps } from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
+interface CustomDialogPortalProps
+  extends DialogPortalProps,
+    HTMLAttributes<HTMLDivElement> {}
 
 const Sheet = SheetPrimitive.Root;
 
@@ -13,11 +18,8 @@ const SheetTrigger = SheetPrimitive.Trigger;
 
 const SheetClose = SheetPrimitive.Close;
 
-const SheetPortal = ({
-  className,
-  ...props
-}: SheetPrimitive.DialogPortalProps) => (
-  <SheetPrimitive.Portal className={cn(className)} {...props} />
+const SheetPortal = ({ ...props }: CustomDialogPortalProps) => (
+  <SheetPrimitive.DialogPortal className={cn()} {...props} />
 );
 SheetPortal.displayName = SheetPrimitive.Portal.displayName;
 
