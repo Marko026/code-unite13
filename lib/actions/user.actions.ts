@@ -28,7 +28,10 @@ export async function updateUser(params: UpdateUserParams) {
       new: true,
     });
     revalidatePath(path);
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error updating user");
+  }
 }
 export async function userDeleted(params: DeleteUserParams) {
   try {
@@ -50,7 +53,11 @@ export async function userDeleted(params: DeleteUserParams) {
     const deletedUser = await User.findByIdAndDelete(user._id);
     return deletedUser;
     // TODO delate user answers and comments ...
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+
+    throw new Error("Error deleting user");
+  }
 }
 
 export async function getUserById(params: any) {
