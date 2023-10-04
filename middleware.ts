@@ -14,10 +14,7 @@ export default authMiddleware({
     `/community`,
     `/jobs`,
   ],
-  ignoredRoutes: [
-    `/api/https://code-unite13-git-latest-branch-marko026.vercel.app/`,
-    `/api/chatgpt`,
-  ],
+  ignoredRoutes: [`/api/webhook`, `/api/chatgpt`],
 });
 
 export const config = {
