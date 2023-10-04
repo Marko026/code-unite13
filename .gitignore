@@ -4,7 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
-
+# ... other rules omitted for brevity ...
+/public/tinymce/
 # testing
 /coverage
 
