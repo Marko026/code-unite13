@@ -49,3 +49,8 @@ export type RightSideBarProps = {
 };
 
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
+
+export type DeleteQuestionParams = {
+  questionId: string;
+  path: string;
+};

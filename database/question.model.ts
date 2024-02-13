@@ -3,7 +3,7 @@ import { Schema, model, models, Document } from "mongoose";
 export interface IQuestions extends Document {
   title: string;
   content: String;
-  tags: Schema.Types.ObjectId[];
+  tags: { _id: number; name: string }[];
   upvotes: Schema.Types.ObjectId[];
   downvotes: Schema.Types.ObjectId[];
   answers: Schema.Types.ObjectId[];
@@ -41,13 +41,10 @@ const questionSchema = new Schema({
     type: Number,
     default: 0,
   },
-  author: {
-    type: Schema.Types.ObjectId,
-    ref: "Users",
-  },
+  author: { type: Schema.Types.ObjectId, ref: "User" },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now,
   },
 });
 

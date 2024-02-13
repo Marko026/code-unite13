@@ -65,7 +65,10 @@ const MobileNav = () => {
         side="left"
         className="background-light900_dark200 no-scrollbar overflow-y-auto border-none"
       >
-        <Link href="/" className="flex items-center gap-1 bg-white">
+        <Link
+          href="/"
+          className="background-light900_dark200 flex items-center gap-1 bg-white"
+        >
           <Image
             src="/assets/images/site-logo.svg"
             alt="logo"

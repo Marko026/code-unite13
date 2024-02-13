@@ -7,9 +7,10 @@ import HomeFilters from "@/components/home/HomeFilters";
 import QuestionCard from "@/components/shared/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import { getQuestions } from "@/lib/actions/questions.actions";
-
+import { auth } from "@clerk/nextjs";
 export default async function Home() {
   const result = await getQuestions({});
+  const { userId: clerkId } = auth();
 
   return (
     <>
@@ -48,6 +49,7 @@ export default async function Home() {
               views={question.views}
               author={question.author}
               createdAt={question.createdAt}
+              clerkId={clerkId}
             />
           ))
         ) : (

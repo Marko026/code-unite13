@@ -1,24 +1,30 @@
+/* eslint-disable tailwindcss/classnames-order */
 import React from "react";
 import RenderTag from "./RenderTag";
 import Link from "next/link";
 import Metric from "./Metric";
 import { formatNumberWithExtension, getTimestamp } from "@/lib/utils";
+import { SignedIn } from "@clerk/nextjs";
+import EditDeleteButtons from "../EditDeleteButtons";
 
 interface QuestionCardProps {
   _id: number;
   title: string;
   tags: { _id: number; name: string }[];
   author: {
-    _id: number;
+    _id: string;
     name: string;
     picture: string;
+    clerkId: string;
   };
-  upvotes: number;
+  upvotes: string[];
   views: number;
   answers: Array<object>;
   createdAt: Date;
+  clerkId?: string | null;
 }
 const QuestionCard = ({
+  clerkId,
   title,
   tags,
   upvotes,
@@ -28,8 +34,10 @@ const QuestionCard = ({
   createdAt,
   _id,
 }: QuestionCardProps) => {
+  const showActionButtons = clerkId === author.clerkId;
+
   return (
-    <section className="background-light800_darkgradient mt-8 flex w-full flex-col space-y-6 rounded-xl p-9 shadow-md">
+    <section className="background-light800_darkgradient relative mt-8 flex w-full flex-col space-y-6 rounded-xl p-9 shadow-md">
       <span className="subtle-regular text-dark400_light700 hidden max-md:block">
         {getTimestamp(createdAt)}
       </span>
@@ -43,7 +51,7 @@ const QuestionCard = ({
       </div>
       <div className=" flex flex-wrap items-center justify-between gap-2">
         <Metric
-          imgUrl="/assets/icons/avatar.svg"
+          imgUrl={author.picture}
           alt="user"
           value={author.name}
           title={`-asked ${getTimestamp(createdAt)}`}
@@ -54,7 +62,7 @@ const QuestionCard = ({
         <Metric
           imgUrl="/assets/icons/like.svg"
           alt="upvotes"
-          value={formatNumberWithExtension(upvotes)}
+          value={formatNumberWithExtension(upvotes.length)}
           title="Votes"
           textStyles="small-meduim text-dark400_light800"
         />
@@ -75,6 +83,12 @@ const QuestionCard = ({
       </div>
 
       {/* to do if sign in add edit delete actions  */}
+
+      <SignedIn>
+        {showActionButtons && (
+          <EditDeleteButtons type="Questions" itemId={JSON.stringify(_id)} />
+        )}
+      </SignedIn>
     </section>
   );
 };
