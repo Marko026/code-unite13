@@ -195,3 +195,17 @@ export async function editQuestion(params: EditQuestionParams) {
     throw new Error("Error editing question");
   }
 }
+
+export async function getHotQuestions() {
+  try {
+    connectToDataBase();
+    const hotQuestions = await Questions.find({})
+      .sort({ views: -1, upvotes: -1 })
+      .limit(5)
+      .populate({ path: "tags", model: Tag });
+    return hotQuestions;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting hot questions");
+  }
+}
