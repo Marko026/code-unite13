@@ -12,6 +12,7 @@ type Props = {
 const EditDeleteButtons = ({ type, itemId }: Props) => {
   const pathname = usePathname() as string;
   const router = useRouter();
+
   const handelEdit = () => {
     router.push(`/question/edit/${itemId}`);
   };

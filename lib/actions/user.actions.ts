@@ -28,6 +28,19 @@ export async function createUser(userData: CreateUserParams) {
     throw new Error("Error creating user");
   }
 }
+export async function getAllUsers(params: GetAllUsersParams) {
+  try {
+    await connectToDataBase();
+
+    // const { page = 1, pageSize = 20, searchQuery, filter } = params;
+
+    const users = await User.find({}).sort({ createdAt: -1 });
+    return { users };
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting user");
+  }
+}
 export async function updateUser(params: UpdateUserParams) {
   try {
     await connectToDataBase();
@@ -82,19 +95,6 @@ export async function getUserById(params: any) {
   }
 }
 
-export async function getAllUsers(params: GetAllUsersParams) {
-  try {
-    await connectToDataBase();
-
-    // const { page = 1, pageSize = 20, searchQuery, filter } = params;
-
-    const users = await User.find({}).sort({ createdAt: -1 });
-    return { users };
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error getting user");
-  }
-}
 export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
   try {
     connectToDataBase();

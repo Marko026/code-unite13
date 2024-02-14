@@ -115,7 +115,6 @@ export async function deleteAnswer(params: DeleteAnswerParams) {
   try {
     connectToDataBase();
     const { answerId, path } = params;
-    console.log(answerId);
     const answer = await Answer.findById(answerId);
 
     if (!answer) throw new Error("Answer not found");
