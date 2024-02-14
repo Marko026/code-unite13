@@ -1,6 +1,6 @@
 import { Badge } from "../ui/badge";
 
-const TagCard = async ({ tag }) => {
+const TagCard = async ({ tag }: { tag: any }) => {
   return (
     <article className="background-light900_dark200 light-border flex flex-col  items-start justify-center rounded-2xl border p-8 sm:w-[240px]">
       <div className="mt-4 text-center">
