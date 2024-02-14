@@ -4,16 +4,19 @@ import TagCard from "@/components/shared/TagCard";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { TagFilters } from "@/constants/filters";
 import { getAllTags } from "@/lib/actions/tag.actions";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
-const page = async () => {
-  const allTags = await getAllTags({});
+const page = async ({ searchParams }: SearchParamsProps) => {
+  const allTags = await getAllTags({
+    searchQuery: searchParams.q,
+  });
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
       <div className="mt-11 flex flex-row justify-between gap-5 max-md:flex-row max-md:flex-wrap sm:items-start  ">
         <LocalSearchBar
-          route="/community"
+          route="/tags"
           iconPosition="left"
           imgSrc="/assets/icons/search.svg"
           placeholder="Search for amazing minds..."

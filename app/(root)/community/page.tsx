@@ -4,9 +4,13 @@ import UserCard from "@/components/shared/UserCard";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.actions";
+import { SearchParamsProps } from "@/types";
 
-const page = async () => {
-  const allUsers = await getAllUsers({});
+const page = async ({ searchParams }: SearchParamsProps) => {
+  const allUsers = await getAllUsers({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+  });
 
   return (
     <>

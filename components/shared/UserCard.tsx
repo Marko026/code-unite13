@@ -1,18 +1,21 @@
 import { getTopInteractedTags } from "@/lib/actions/tag.actions";
-import console from "console";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import RenderTag from "./RenderTag";
 import { Badge } from "../ui/badge";
-interface Props {
-  _id: string;
-  clerkId: string;
-  picture: string;
-  name: string;
-  username: string;
+
+interface UserProps {
+  user: {
+    _id: string;
+    name: string;
+    username: string;
+    picture: string;
+    clerkId: string;
+  };
 }
-const UserCard = async ({ user }: Props) => {
+
+const UserCard = async ({ user }: UserProps) => {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
 
   return (

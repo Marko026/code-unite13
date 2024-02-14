@@ -1,5 +1,12 @@
 import { Schema, model, models, Document } from "mongoose";
 
+type Author = {
+  _id: number;
+  name: string;
+  picture: string;
+  clerkId: string;
+};
+
 export interface IQuestions extends Document {
   title: string;
   content: String;
@@ -8,7 +15,7 @@ export interface IQuestions extends Document {
   downvotes: Schema.Types.ObjectId[];
   answers: Schema.Types.ObjectId[];
   views: number;
-  author: Schema.Types.ObjectId;
+  author: Author;
   createdAt: Date;
 }
 

@@ -8,9 +8,15 @@ import QuestionCard from "@/components/shared/QuestionCard";
 import NoResult from "@/components/shared/NoResult";
 import { getQuestions } from "@/lib/actions/questions.actions";
 import { auth } from "@clerk/nextjs";
-export default async function Home() {
-  const result = await getQuestions({});
+import { SearchParamsProps } from "@/types";
+export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();
+  const result = await getQuestions({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+  });
+
+  // TODO:Fetch recommended questions
 
   return (
     <>

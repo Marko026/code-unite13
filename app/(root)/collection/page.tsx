@@ -5,12 +5,14 @@ import NoResult from "@/components/shared/NoResult";
 import Filter from "@/components/shared/Filter";
 import { getSavedQuestion } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
+import { SearchParamsProps } from "@/types";
 
-export default async function Collection() {
+export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
   if (!userId) return null;
   const result = await getSavedQuestion({
     clerkId: userId,
+    searchQuery: searchParams.q,
   });
 
   return (
@@ -32,7 +34,7 @@ export default async function Collection() {
       </div>
 
       {result.questions.length > 0 ? (
-        result.questions.map((question) => (
+        result.questions.map((question: any) => (
           <QuestionCard
             key={question._id}
             _id={question._id}

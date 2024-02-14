@@ -32,9 +32,30 @@ export async function getAllUsers(params: GetAllUsersParams) {
   try {
     await connectToDataBase();
 
-    // const { page = 1, pageSize = 20, searchQuery, filter } = params;
+    const { searchQuery, filter } = params;
+    const query: FilterQuery<typeof User> = {};
+    if (searchQuery) {
+      query.$or = [
+        { name: { $regex: new RegExp(searchQuery, "i") } },
+        { username: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+    let sortOptions = {};
+    switch (filter) {
+      case "new_users":
+        sortOptions = { joinAt: -1 };
+        break;
+      case "old_users":
+        sortOptions = { joinAt: 1 };
+        break;
+      case "top_contributors":
+        sortOptions = { reputation: -1 };
+        break;
+      default:
+        break;
+    }
 
-    const users = await User.find({}).sort({ createdAt: -1 });
+    const users = await User.find(query).sort(sortOptions);
     return { users };
   } catch (error) {
     console.log(error);
@@ -128,7 +149,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestion(params: GetSavedQuestionsParams) {
   try {
     connectToDataBase();
-    const { clerkId, page = 1, pageSize = 10, filter, searchQuery } = params;
+    const { clerkId, searchQuery } = params;
     const query: FilterQuery<typeof Questions> = searchQuery
       ? { title: { $regex: new RegExp(searchQuery, "i") } }
       : {};
@@ -175,7 +196,7 @@ export async function getUserInfo(params: GetUserByIdParams) {
 
 export async function getUserQuestions(params: GetUserStatsParams) {
   if (!params.userId) throw new Error("User not found");
-  const { userId, page = 1, pageSize = 10 } = params;
+  const { userId } = params;
   try {
     connectToDataBase();
     const totalQuestions = await Questions.countDocuments({ author: userId });
@@ -195,7 +216,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
   try {
     connectToDataBase();
 
-    const { userId, page = 1, pageSize = 10 } = params;
+    const { userId } = params;
 
     if (!userId) throw new Error("User not found");
     const totalAnswers = await Answer.countDocuments({ author: userId });

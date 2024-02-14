@@ -13,7 +13,7 @@ import { FilterQuery } from "mongoose";
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
     connectToDataBase();
-    const { userId, limit } = params;
+    const { userId } = params;
     const user = await User.findById(userId);
     if (!user) throw new Error("User not found");
 
@@ -34,19 +34,24 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDataBase();
-    const { page, pageSize, filter, searchQuery } = params;
+    const { searchQuery } = params;
 
-    const tags = await Tag.find({}).sort({ createdAt: -1 });
+    const query: FilterQuery<typeof Tag> = {};
+    if (searchQuery) {
+      query.$or = [{ name: { $regex: new RegExp(searchQuery, "i") } }];
+    }
+
+    const tags = await Tag.find(query);
     return { tags };
   } catch (error) {
-    // console.log(error);
-    // throw new Error("Error getting top interacted tags");
+    console.log(error);
+    throw new Error("Error getting top interacted tags");
   }
 }
 export async function getQuestionByIdTagId(params: GetQuestionsByTagIdParams) {
   try {
     connectToDataBase();
-    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const { tagId, searchQuery } = params;
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
     // This code snippet finds a single document in the "Tag" collection that matches the "tagFilter" criteria. It then populates the "questions" field of the document with additional data from the "Questions" collection, including filtering the questions based on
@@ -71,5 +76,19 @@ export async function getQuestionByIdTagId(params: GetQuestionsByTagIdParams) {
   } catch (error) {
     console.log(error);
     throw new Error("Error getting question by id");
+  }
+}
+export async function getPopularTags() {
+  try {
+    connectToDataBase();
+    const popularTags = await Tag.aggregate([
+      { $project: { name: 1, numberOfQuestions: { $size: "$questions" } } },
+      { $sort: { numberOfQuestions: -1 } },
+      { $limit: 5 },
+    ]);
+    return popularTags;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Error getting top interacted tags");
   }
 }

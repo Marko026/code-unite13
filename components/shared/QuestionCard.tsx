@@ -1,4 +1,3 @@
-/* eslint-disable tailwindcss/classnames-order */
 import React from "react";
 import RenderTag from "./RenderTag";
 import Link from "next/link";
@@ -12,7 +11,7 @@ interface QuestionCardProps {
   title: string;
   tags: { _id: number; name: string }[];
   author: {
-    _id: string;
+    _id: number;
     name: string;
     picture: string;
     clerkId: string;
@@ -81,8 +80,6 @@ const QuestionCard = ({
           textStyles="small-meduim text-dark400_light800"
         />
       </div>
-
-      {/* to do if sign in add edit delete actions  */}
 
       <SignedIn>
         {showActionButtons && (

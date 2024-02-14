@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import qs from "query-string";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,25 +23,25 @@ export const getTimestamp = (createdAt: Date): string => {
     return `just now`;
   } else if (timeDifference < minute) {
     const seconds = Math.floor(timeDifference / second);
-    return `${seconds} sec${seconds > 1 ? "s" : ""} ago`;
+    return `${seconds} sec${seconds > 1 ? "" : ""} ago`;
   } else if (timeDifference < hour) {
     const minutes = Math.floor(timeDifference / minute);
-    return `${minutes} min${minutes > 1 ? "s" : ""} ago`;
+    return `${minutes} min${minutes > 1 ? "" : ""} ago`;
   } else if (timeDifference < day) {
     const hours = Math.floor(timeDifference / hour);
-    return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+    return `${hours} hour${hours > 1 ? "" : ""} ago`;
   } else if (timeDifference < week) {
     const days = Math.floor(timeDifference / day);
-    return `${days} day${days > 1 ? "s" : ""} ago`;
+    return `${days} day${days > 1 ? "" : ""} ago`;
   } else if (timeDifference < month) {
     const weeks = Math.floor(timeDifference / week);
-    return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
+    return `${weeks} week${weeks > 1 ? "" : ""} ago`;
   } else if (timeDifference < year) {
     const months = Math.floor(timeDifference / month);
-    return `${months} month${months > 1 ? "s" : ""} ago`;
+    return `${months} month${months > 1 ? "" : ""} ago`;
   } else {
     const years = Math.floor(timeDifference / year);
-    return `${years} year${years > 1 ? "s" : ""} ago`;
+    return `${years} year${years > 1 ? "" : ""} ago`;
   }
 };
 
@@ -56,4 +57,48 @@ export const getJoinDate = (date: Date): string => {
   const month = date.toLocaleString("default", { month: "short" });
   const year = date.getFullYear();
   return `${month} ${year}`;
+};
+
+type UrlQueryParams = {
+  params: string;
+  key: string;
+  value: string | null;
+};
+
+export const formUrlQuery = ({ params, key, value }: UrlQueryParams) => {
+  const currentUrl = qs.parse(params);
+  currentUrl[key] = value;
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    {
+      skipNull: true,
+    },
+  );
+};
+type RemoveKeysFromQuery = {
+  params: string;
+  keysTorRemove: string[];
+};
+export const removeKeysFromQuery = ({
+  params,
+  keysTorRemove,
+}: RemoveKeysFromQuery) => {
+  const currentUrl = qs.parse(params);
+  keysTorRemove.forEach((key) => {
+    delete currentUrl[key];
+  });
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+
+    {
+      skipNull: true,
+      skipEmptyString: true,
+    },
+  );
 };

@@ -15,18 +15,43 @@ import { DeleteQuestionParams } from "@/types";
 import { revalidatePath } from "next/cache";
 import Answer from "@/database/answer.modal";
 import Interaction from "@/database/interaction.model";
+import { FilterQuery } from "mongoose";
 
 export async function getQuestions(params: GetQuestionsParams) {
   try {
     connectToDataBase();
+    const { searchQuery, filter } = params;
 
-    const questions = await Questions.find({})
-      .sort({ _id: -1 })
+    const query: FilterQuery<typeof Questions> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+    let sortOptions = {};
+    switch (filter) {
+      case "newest":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "unanswered":
+        query.answers = { $size: 0 };
+        break;
+      case "frequent":
+        sortOptions = { views: -1 };
+        break;
+      default:
+        break;
+    }
+
+    const questions = await Questions.find(query)
       .populate({
         path: "tags",
         model: Tag,
       })
-      .populate({ path: "author", model: User });
+      .populate({ path: "author", model: User })
+      .sort(sortOptions);
 
     return { questions };
   } catch (error) {

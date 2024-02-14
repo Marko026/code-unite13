@@ -3,37 +3,11 @@ import Link from "next/link";
 import React from "react";
 import RenderTag from "./RenderTag";
 import { getHotQuestions } from "@/lib/actions/questions.actions";
-
-const popularTags = [
-  {
-    _id: 1,
-    title: "Next.js",
-    totalQuestions: 3,
-  },
-  {
-    _id: 2,
-    title: "React.js",
-    totalQuestions: 2,
-  },
-  {
-    _id: 3,
-    title: "Javascript",
-    totalQuestions: 1,
-  },
-  {
-    _id: 4,
-    title: "Typescript",
-    totalQuestions: 10,
-  },
-  {
-    _id: 5,
-    title: "Next.js",
-    totalQuestions: 3,
-  },
-];
+import { getPopularTags } from "@/lib/actions/tag.actions";
 
 const RightSideBar = async () => {
   const hotQuestions = await getHotQuestions();
+  const popularTags = await getPopularTags();
 
   return (
     <section className=" background-light900_dark200 custom-scrollbar sticky right-0 top-0 hidden h-screen flex-col  overflow-y-auto  border-l-[1px] px-8 dark:border-transparent lg:w-[350px] xl:flex">
@@ -63,9 +37,9 @@ const RightSideBar = async () => {
             {popularTags.map((tag) => (
               <RenderTag
                 key={tag._id}
-                name={tag.title}
+                name={tag.name}
                 _id={tag._id}
-                totalQuestions={tag.totalQuestions}
+                totalQuestions={tag.numberOfQuestions}
                 showCount
               />
             ))}

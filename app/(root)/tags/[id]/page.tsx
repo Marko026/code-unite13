@@ -10,7 +10,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
   const result = await getQuestionByIdTagId({
     tagId: params.id,
     page: 1,
-    searchQuery: searchParams?.q,
+    searchQuery: searchParams.q,
   });
 
   return (

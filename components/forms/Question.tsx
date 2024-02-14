@@ -35,14 +35,16 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const parseQuestionDetails = JSON.parse(questionDetails || "");
+  const parseQuestionDetails =
+    questionDetails && JSON.parse(questionDetails || "");
+
   const groupTags = parseQuestionDetails?.tags.map((tag: any) => tag.name);
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: parseQuestionDetails.title || "",
-      explanation: parseQuestionDetails.content || "",
+      title: parseQuestionDetails?.title || "",
+      explanation: parseQuestionDetails?.content || "",
       tags: groupTags || [],
     },
   });
@@ -153,7 +155,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
                   }
                   onBlur={field.onBlur}
                   onEditorChange={(content) => field.onChange(content)}
-                  initialValue={parseQuestionDetails.content || ""}
+                  initialValue={parseQuestionDetails?.content || ""}
                   init={{
                     height: 500,
                     menubar: false,
