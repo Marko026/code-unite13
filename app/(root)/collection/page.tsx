@@ -6,6 +6,7 @@ import Filter from "@/components/shared/Filter";
 import { getSavedQuestion } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/Pagination/page";
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
@@ -14,7 +15,10 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
     clerkId: userId,
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
+
+  console.log(result);
 
   return (
     <>
@@ -57,6 +61,12 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
           linkTitle="Ask Question"
         />
       )}
+      <div className="mt-10">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams : 1}
+          isNext={result.isNext}
+        />
+      </div>
     </>
   );
 }

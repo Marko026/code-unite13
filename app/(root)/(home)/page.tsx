@@ -9,11 +9,14 @@ import NoResult from "@/components/shared/NoResult";
 import { getQuestions } from "@/lib/actions/questions.actions";
 import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
+import Pagination from "@/components/shared/Pagination/page";
+
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();
   const result = await getQuestions({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   // TODO:Fetch recommended questions
@@ -67,6 +70,12 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             linkTitle="Ask Question"
           />
         )}
+      </div>
+      <div className="mt-8">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={result.isNext}
+        />
       </div>
     </>
   );
