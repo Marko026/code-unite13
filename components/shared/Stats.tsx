@@ -11,15 +11,15 @@ const Stats = ({ totalQuestions, totalAnswers }: StatsProps) => {
   return (
     <section className="mt-10">
       <h3 className="h3-semibold text-dark200_light900 my-4">Stats</h3>
-      <div className="flex flex-col gap-5  flex-wrap xs:flex-row md:justify-between ">
-        <div className=" border grow basis-1/3 xl:basis-1/5 p-6 flex justify-center sm:items-center xs:items-start gap-5 xs:flex-col sm:flex-row light-border background-light900_dark300 rounded-md">
-          <div className="flex flex-col justify-center items-center">
+      <div className="flex flex-col flex-wrap  gap-5 xs:flex-row md:justify-between ">
+        <div className=" light-border background-light900_dark300 flex grow basis-1/3 justify-center gap-5 rounded-md border p-6 xs:flex-col xs:items-start sm:flex-row sm:items-center xl:basis-1/5">
+          <div className="flex flex-col items-center justify-center">
             <p className="paragraph-semibold text-dark200_light900">
               {formatNumberWithExtension(totalQuestions)}
             </p>
             <p className="body-medium text-dark400_light700">Questions</p>
           </div>
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col items-center justify-center">
             <p className="paragraph-semibold text-dark200_light900">
               {formatNumberWithExtension(totalAnswers)}
             </p>

@@ -1,5 +1,6 @@
 import Filters from "@/components/shared/Filter";
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination/page";
 import TagCard from "@/components/shared/TagCard";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { TagFilters } from "@/constants/filters";
@@ -11,9 +12,11 @@ const page = async ({ searchParams }: SearchParamsProps) => {
   const allTags = await getAllTags({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
   });
+
   return (
-    <>
+    <div>
       <h1 className="h1-bold text-dark100_light900">All Tags</h1>
       <div className="mt-11 flex flex-row justify-between gap-5 max-md:flex-row max-md:flex-wrap sm:items-start  ">
         <LocalSearchBar
@@ -45,7 +48,11 @@ const page = async ({ searchParams }: SearchParamsProps) => {
           />
         )}
       </section>
-    </>
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={allTags.isNext}
+      />
+    </div>
   );
 };
 

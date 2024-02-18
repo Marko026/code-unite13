@@ -34,7 +34,8 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
 export async function getAllTags(params: GetAllTagsParams) {
   try {
     connectToDataBase();
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 5 } = params;
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Tag> = {};
     if (searchQuery) {
@@ -57,8 +58,13 @@ export async function getAllTags(params: GetAllTagsParams) {
         break;
     }
 
-    const tags = await Tag.find(query).sort(sortOptions);
-    return { tags };
+    const tags = await Tag.find(query)
+      .sort(sortOptions)
+      .skip(skipAmount)
+      .limit(pageSize);
+    const totalTags = await Tag.countDocuments(query);
+    const isNext = totalTags > skipAmount + tags.length;
+    return { tags, isNext };
   } catch (error) {
     console.log(error);
     throw new Error("Error getting top interacted tags");
@@ -67,7 +73,10 @@ export async function getAllTags(params: GetAllTagsParams) {
 export async function getQuestionByIdTagId(params: GetQuestionsByTagIdParams) {
   try {
     connectToDataBase();
-    const { tagId, searchQuery } = params;
+    const { tagId, searchQuery, page = 1, pageSize = 1 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
+
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
     // This code snippet finds a single document in the "Tag" collection that matches the "tagFilter" criteria. It then populates the "questions" field of the document with additional data from the "Questions" collection, including filtering the questions based on
@@ -77,18 +86,24 @@ export async function getQuestionByIdTagId(params: GetQuestionsByTagIdParams) {
       match: searchQuery
         ? { title: { $regex: new RegExp(searchQuery, "i") } }
         : {},
-      options: { sort: { createdAt: -1 } },
+      options: {
+        sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize + 1,
+      },
       populate: [
         { path: "author", model: User, select: "_id name picture" },
         { path: "tags", model: Tag, select: "_id name" },
       ],
     });
+
+    const isNext = tag.questions.length > pageSize;
     if (!tag) {
       throw new Error("User not found");
     }
     const questions = tag.questions;
 
-    return { tagTitle: tag.name, questions };
+    return { tagTitle: tag.name, questions, isNext };
   } catch (error) {
     console.log(error);
     throw new Error("Error getting question by id");

@@ -18,8 +18,6 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
     page: searchParams.page ? +searchParams.page : 1,
   });
 
-  console.log(result);
-
   return (
     <>
       <h1 className="h1-bold text-dark100_light900">Saved Questions</h1>
@@ -63,7 +61,7 @@ export default async function Collection({ searchParams }: SearchParamsProps) {
       )}
       <div className="mt-10">
         <Pagination
-          pageNumber={searchParams?.page ? +searchParams : 1}
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
           isNext={result.isNext}
         />
       </div>

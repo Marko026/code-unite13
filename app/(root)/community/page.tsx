@@ -44,7 +44,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
         )}
       </section>
       <Pagination
-        pageNumber={searchParams?.page ? +searchParams : 1}
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
         isNext={allUsers.isNext}
       />
     </>

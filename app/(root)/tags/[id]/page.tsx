@@ -1,4 +1,5 @@
 import NoResult from "@/components/shared/NoResult";
+import Pagination from "@/components/shared/Pagination/page";
 import QuestionCard from "@/components/shared/QuestionCard";
 import LocalSearchBar from "@/components/shared/search/LocalSearchBar";
 import { IQuestions } from "@/database/question.model";
@@ -9,13 +10,13 @@ import React from "react";
 const Page = async ({ params, searchParams }: URLProps) => {
   const result = await getQuestionByIdTagId({
     tagId: params.id,
-    page: 1,
     searchQuery: searchParams.q,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
     <div>
-      <>
+      <div className="mb-9">
         <h1 className="h1-bold text-dark100_light900">{result.tagTitle}</h1>
         <div className="mt-11 flex w-full flex-row justify-between gap-5 max-md:flex-row max-md:flex-wrap sm:items-start  ">
           <LocalSearchBar
@@ -50,7 +51,11 @@ const Page = async ({ params, searchParams }: URLProps) => {
             linkTitle="Ask Question"
           />
         )}
-      </>
+      </div>
+      <Pagination
+        pageNumber={searchParams?.page ? +searchParams.page : 1}
+        isNext={result.isNext}
+      />
     </div>
   );
 };
