@@ -7,6 +7,7 @@ import Image from "next/image";
 import { getTimestamp } from "@/lib/utils";
 import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
+import Pagination from "./Pagination/page";
 
 interface Props {
   questionId: string;
@@ -35,7 +36,7 @@ const AllAnswers = async ({
         <h3 className="primary-text-gradient">{totalAnswers} Answers</h3>
         <Filter filters={AnswerFilters} />
       </div>
-      <div className="flex w-full flex-col">
+      <div className="mb-9 flex w-full flex-col">
         {result?.answers.map((answer) => (
           <article key={answer._id} className="light-border border-b py-10">
             <div className="flex items-center justify-between">
@@ -79,6 +80,7 @@ const AllAnswers = async ({
           </article>
         ))}
       </div>
+      <Pagination pageNumber={page ? +page : 1} isNext={result?.isNext} />
     </div>
   );
 };

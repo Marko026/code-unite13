@@ -6,7 +6,7 @@ import React from "react";
 
 interface Props {
   pageNumber: number;
-  isNext: boolean;
+  isNext: boolean | undefined;
 }
 
 const Pagination = ({ pageNumber, isNext }: Props) => {
