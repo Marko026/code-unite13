@@ -14,10 +14,10 @@ const Loading = () => {
           </Button>
         </Link>
       </div>
-      <div className="mt-11 flex flex-col justify-between gap-5 max-md:flex-row max-md:flex-wrap sm:items-start  ">
-        <Skeleton className="h-14 flex-1" />
-        <div className="mb-9 hidden max-md:block">
-          <Skeleton className="h-14 w-28" />
+      <div className="my-11 flex flex-col gap-5 md:flex-row ">
+        <Skeleton className="h-14 w-full md:w-full" />
+        <div className="mb-9 ">
+          <Skeleton className="h-14 w-full md:hidden" />
         </div>
       </div>
       <div className="my-10 hidden flex-wrap gap-6 md:flex">
