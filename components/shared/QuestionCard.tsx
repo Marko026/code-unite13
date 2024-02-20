@@ -48,7 +48,7 @@ const QuestionCard = ({
           <RenderTag _id={tag._id} key={tag._id} name={tag.name} />
         ))}
       </div>
-      <div className=" flex flex-wrap items-center justify-between gap-2">
+      <div className=" flex w-full items-center justify-between gap-2">
         <Metric
           imgUrl={author.picture}
           alt="user"
@@ -58,27 +58,29 @@ const QuestionCard = ({
           isAuthor
           textStyles="body-meduim text-dark400_light700"
         />
-        <Metric
-          imgUrl="/assets/icons/like.svg"
-          alt="upvotes"
-          value={formatNumberWithExtension(upvotes.length)}
-          title="Votes"
-          textStyles="small-meduim text-dark400_light800"
-        />
-        <Metric
-          imgUrl="/assets/icons/message.svg"
-          alt="answers"
-          value={formatNumberWithExtension(answers.length)}
-          title="Answers"
-          textStyles="small-meduim text-dark400_light800"
-        />
-        <Metric
-          imgUrl="/assets/icons/eye.svg"
-          alt="views"
-          value={formatNumberWithExtension(views)}
-          title="Views"
-          textStyles="small-meduim text-dark400_light800"
-        />
+        <div className="flex gap-4">
+          <Metric
+            imgUrl="/assets/icons/like.svg"
+            alt="upvotes"
+            value={formatNumberWithExtension(upvotes.length)}
+            title="Votes"
+            textStyles="small-meduim text-dark400_light800"
+          />
+          <Metric
+            imgUrl="/assets/icons/message.svg"
+            alt="answers"
+            value={formatNumberWithExtension(answers.length)}
+            title="Answers"
+            textStyles="small-meduim text-dark400_light800"
+          />
+          <Metric
+            imgUrl="/assets/icons/eye.svg"
+            alt="views"
+            value={formatNumberWithExtension(views)}
+            title="Views"
+            textStyles="small-meduim text-dark400_light800"
+          />
+        </div>
       </div>
 
       <SignedIn>
