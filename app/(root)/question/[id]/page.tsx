@@ -81,9 +81,7 @@ const Page = async ({ params, searchParams }: any) => {
           textStyles="small-meduim text-dark400_light800"
         />
       </div>
-      <div className="bg-white dark:bg-black dark:text-white">
-        <ParseHTML data={result.content} />
-      </div>
+      <ParseHTML data={result.content} />
       <div className="mt-8 flex flex-wrap items-center gap-2">
         {result.tags.map((tag: any) => (
           <RenderTag

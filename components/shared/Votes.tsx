@@ -52,7 +52,7 @@ const Votes = ({
           hasdownVoted,
           path: pathname,
         });
-      return toast({
+      toast({
         title: `Upvote ${!hasupVoted ? "Successfull" : "Removed"}`,
         variant: !hasupVoted ? "default" : "destructive",
       });
