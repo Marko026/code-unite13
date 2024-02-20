@@ -18,6 +18,8 @@ interface UserProps {
 const UserCard = async ({ user }: UserProps) => {
   const interactedTags = await getTopInteractedTags({ userId: user._id });
 
+  console.log(interactedTags);
+
   return (
     <Link
       href={`/profile/${user.clerkId}`}

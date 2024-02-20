@@ -9,6 +9,7 @@ import {
   GetQuestionByIdParams,
   GetQuestionsParams,
   QuestionVoteParams,
+  RecommendedParams,
 } from "./shared.types";
 import User from "@/database/user.modal";
 import { DeleteQuestionParams } from "@/types";
@@ -258,5 +259,50 @@ export async function getHotQuestions() {
   } catch (error) {
     console.log(error);
     throw new Error("Error getting hot questions");
+  }
+}
+export async function getRecommendedQuestions(params: RecommendedParams) {
+  try {
+    await connectToDataBase();
+    const { userId, page = 1, pageSize = 10, searchQuery } = params;
+
+    const user = await User.findOne({ clerkId: userId });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const skipAmount = (page - 1) * pageSize;
+    const userInteraction = await Interaction.find({ user: user._id })
+      .populate("tags")
+      .exec();
+
+    const userTags = userInteraction.reduce((tags, interaction) => {
+      tags = tags.concat(interaction.tags);
+      return tags;
+    }, []);
+
+    const distinctTags = [...new Set(userTags.map((tag) => tag._id))];
+
+    const query: FilterQuery<typeof Questions> = {
+      $and: [{ tags: { $in: distinctTags } }, { author: { $ne: user._id } }],
+    };
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, "i") } },
+        { content: { $regex: new RegExp(searchQuery, "i") } },
+      ];
+    }
+    const totalQuestions = await Questions.countDocuments(query);
+
+    const recommendedQuestions = await Questions.find(query)
+      .populate({ path: "tags", model: Tag })
+      .populate({ path: "author", model: User })
+      .skip(skipAmount)
+      .limit(pageSize);
+
+    const isNext = totalQuestions > skipAmount + recommendedQuestions.length;
+
+    return { questions: recommendedQuestions, isNext };
+  } catch (error) {
+    throw new Error("Error getting recommended questions");
   }
 }

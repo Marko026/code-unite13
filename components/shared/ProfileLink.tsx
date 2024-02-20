@@ -10,7 +10,7 @@ type ProfileLinksProps = {
 
 const ProfileLink = ({ imgUrl, title, href }: ProfileLinksProps) => {
   return (
-    <div className="flex-center">
+    <div className="flex-center space-x-2">
       <Image src={imgUrl} width={20} height={20} alt="icon" />
       {href ? (
         <Link

@@ -73,7 +73,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name="name"
           render={({ field }) => (
             <FormItem className="space-y-3.5">
-              <FormLabel className="">
+              <FormLabel className="paragraph-semibold text-dark400_light800">
                 Name <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl>
@@ -92,7 +92,7 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name="username"
           render={({ field }) => (
             <FormItem className="space-y-3.5">
-              <FormLabel className="">
+              <FormLabel className="paragraph-semibold text-dark400_light800">
                 Username <span className="text-primary-500">*</span>
               </FormLabel>
               <FormControl>
@@ -111,7 +111,9 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name="portfolioWebsite"
           render={({ field }) => (
             <FormItem className="space-y-3.5">
-              <FormLabel className="">PortfolioLink</FormLabel>
+              <FormLabel className="paragraph-semibold text-dark400_light800">
+                PortfolioLink
+              </FormLabel>
               <FormControl>
                 <Input
                   type="url"
@@ -129,7 +131,9 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name="location"
           render={({ field }) => (
             <FormItem className="space-y-3.5">
-              <FormLabel className="">Location</FormLabel>
+              <FormLabel className="paragraph-semibold text-dark400_light800">
+                Location
+              </FormLabel>
               <FormControl>
                 <Input
                   className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
@@ -146,7 +150,9 @@ const Profile = ({ clerkId, user }: ProfileProps) => {
           name="bio"
           render={({ field }) => (
             <FormItem className="space-y-3.5">
-              <FormLabel className="">Bio</FormLabel>
+              <FormLabel className="paragraph-semibold text-dark400_light800">
+                Bio
+              </FormLabel>
               <FormControl>
                 <Textarea
                   className="no-focus paragraph-regular light-border-2 background-light700_dark300 text-dark300_light700 min-h-[56px] border"
