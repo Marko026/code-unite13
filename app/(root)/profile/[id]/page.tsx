@@ -12,6 +12,17 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Profile | DevOverFlow",
+  description:
+    "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  icons: {
+    icon: "/assets/images/site-logo.svg",
+  },
+};
+
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
   const userInfo = await getUserInfo({ userId: params.id });

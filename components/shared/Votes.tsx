@@ -11,6 +11,7 @@ import { toggleSaveQuestion } from "@/lib/actions/user.actions";
 import { useEffect, useRef } from "react";
 import { viewQuestion } from "@/lib/actions/interaction.action";
 import { undefined } from "zod";
+import { toast } from "../ui/use-toast";
 interface Props {
   type: string;
   itemId: string;
@@ -37,7 +38,10 @@ const Votes = ({
 
   const handleVote = async (action: string) => {
     if (!userId) {
-      return;
+      return toast({
+        title: "Please login to vote",
+        description: "You need to be logged in to vote",
+      });
     }
     if (action === "upvote") {
       if (type === "Question")
@@ -48,6 +52,10 @@ const Votes = ({
           hasdownVoted,
           path: pathname,
         });
+      return toast({
+        title: `Upvote ${!hasupVoted ? "Successfull" : "Removed"}`,
+        variant: !hasupVoted ? "default" : "destructive",
+      });
     } else if (type === "Answer") {
       await upVoteAnswer({
         answerId: JSON.parse(itemId),
@@ -56,8 +64,6 @@ const Votes = ({
         hasdownVoted,
         path: pathname,
       });
-
-      // todo: show a toast
     }
     if (action === "downvote") {
       if (type === "Question") {
@@ -69,6 +75,10 @@ const Votes = ({
           path: pathname,
         });
       }
+      return toast({
+        title: `Downvote ${!hasdownVoted ? "Successfull" : "Removed"}`,
+        variant: !hasdownVoted ? "default" : "destructive",
+      });
     } else if (type === "Answer") {
       await downVoteAnswer({
         answerId: JSON.parse(itemId),
@@ -84,6 +94,10 @@ const Votes = ({
       userId: JSON.parse(userId),
       questionId: JSON.parse(itemId),
       path: pathname,
+    });
+    return toast({
+      title: `Question ${!hasSaved ? "saved in collections" : "Removed"}`,
+      variant: !hasSaved ? "default" : "destructive",
     });
   };
 

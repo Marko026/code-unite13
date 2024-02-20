@@ -8,6 +8,17 @@ import { getAllTags } from "@/lib/actions/tag.actions";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tags | DevOverFlow",
+  description:
+    "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  icons: {
+    icon: "/assets/images/site-logo.svg",
+  },
+};
+
 const page = async ({ searchParams }: SearchParamsProps) => {
   const allTags = await getAllTags({
     searchQuery: searchParams.q,

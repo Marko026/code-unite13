@@ -10,6 +10,16 @@ import { getQuestions } from "@/lib/actions/questions.actions";
 import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination/page";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home | DevOverFlow",
+  description:
+    "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  icons: {
+    icon: "/assets/images/site-logo.svg",
+  },
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();

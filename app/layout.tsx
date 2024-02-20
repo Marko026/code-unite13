@@ -22,7 +22,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "DevFlow",
   description:
-    "a community-driven platform for asking and answering questions about programming get help,share kwnolage and colloborate with developers from around  the world ",
+    "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
@@ -35,6 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <link rel="icon" href="/favicon.ico" sizes="any" />
       <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
         <ClerkProvider
           appearance={{
