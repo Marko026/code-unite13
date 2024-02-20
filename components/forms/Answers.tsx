@@ -29,6 +29,7 @@ const Answers = ({ question, questionId, authorId }: Props) => {
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAi, setIsSubmittingAi] = useState(false);
 
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
@@ -55,8 +56,33 @@ const Answers = ({ question, questionId, authorId }: Props) => {
 
       if (editorRef.current) {
         const editor = editorRef.current as any;
-        editor.setContent(" ");
+        editor.setContent("");
       }
+    }
+  };
+  const generateAiAnswer = async () => {
+    if (!authorId) return;
+    setIsSubmittingAi(true);
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question }),
+        },
+      );
+      const aiAnswer = await response.json();
+      const formatedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent(formatedAnswer);
+      }
+
+      // TODO: Add the tost notification
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmittingAi(false);
     }
   };
   return (
@@ -67,17 +93,23 @@ const Answers = ({ question, questionId, authorId }: Props) => {
         </h4>
 
         <Button
-          onClick={() => {}}
+          onClick={generateAiAnswer}
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none"
         >
-          <Image
-            src="/assets/icons/stars.svg"
-            alt="start"
-            width={12}
-            height={12}
-            className="object-contain"
-          />
-          Generate Ai Answer
+          {isSubmittingAi ? (
+            <>Generating...</>
+          ) : (
+            <>
+              <Image
+                src="/assets/icons/stars.svg"
+                alt="start"
+                width={12}
+                height={12}
+                className="object-contain"
+              />
+              Generate Ai Answer
+            </>
+          )}
         </Button>
       </div>
       <Form {...form}>
