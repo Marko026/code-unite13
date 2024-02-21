@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
   openGraph: {
     images: {
-      url: "/assets/images/opengraph-image.png",
+      url: "https://code-unite13.vercel.app/assets/images/opengraph-image.png",
       width: 470,
       height: 270,
       alt: "Og Image Alt",

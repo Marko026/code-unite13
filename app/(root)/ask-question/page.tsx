@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     images: {
-      url: "/assets/images/opengraph-image.png",
+      url: "https://code-unite13.vercel.app/assets/images/opengraph-image.png",
       width: 470,
       height: 270,
       alt: "Og Image Alt",
