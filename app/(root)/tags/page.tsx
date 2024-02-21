@@ -17,8 +17,18 @@ export const metadata: Metadata = {
   icons: "assets/images/opengraph-image.png",
   openGraph: {
     title: "Tags | DevOverFlow",
+    url: "https://code-unite13.vercel.app/",
+    siteName: "DevOverFlow",
     description:
       "A community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+    images: [
+      {
+        url: "assets/images/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Og Image",
+      },
+    ],
   },
 };
 
