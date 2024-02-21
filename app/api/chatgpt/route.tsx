@@ -7,6 +7,9 @@ export const POST = async (request: Request) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization,",
 
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
