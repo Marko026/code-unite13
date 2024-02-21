@@ -33,7 +33,7 @@ export async function createUser(userData: CreateUserParams) {
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDataBase();
-    const { searchQuery, filter, page = 1, pageSize = 1 } = params;
+    const { searchQuery, filter, page = 1, pageSize = 10 } = params;
     const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof User> = {};
@@ -158,7 +158,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestion(params: GetSavedQuestionsParams) {
   try {
     await connectToDataBase();
-    const { clerkId, searchQuery, filter, page = 1, pageSize = 20 } = params;
+    const { clerkId, searchQuery, filter, page = 1, pageSize = 4 } = params;
     const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Questions> = searchQuery

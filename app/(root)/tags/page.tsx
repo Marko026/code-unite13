@@ -43,7 +43,7 @@ const page = async ({ searchParams }: SearchParamsProps) => {
           containerClasses=" max-md:block max-md:w-full sm:w-[40%] "
         />
       </div>
-      <section className="mt-12 flex w-full flex-wrap justify-start gap-5">
+      <section className="my-12 flex w-full flex-wrap justify-start gap-5">
         {allTags && allTags.tags?.length > 0 ? (
           allTags.tags.map((tag) => (
             <Link href={`/tags/${tag._id}`} key={tag._id}>
