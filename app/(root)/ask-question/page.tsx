@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/assets/images/site-logo.svg",
   },
+  openGraph: {
+    images: [{ url: "/assets/images/opengraph-image.png" }],
+  },
 };
 
 const AskQUestion = async () => {
