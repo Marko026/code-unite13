@@ -7,9 +7,6 @@ export const POST = async (request: Request) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, GET, OPTIONS, DELETE, PUT",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization,",
 
         Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
       },
@@ -24,7 +21,14 @@ export const POST = async (request: Request) => {
     const responseData = await response.json();
 
     const reply = responseData.choices[0].message.content;
-    return NextResponse.json({ reply });
+    return NextResponse.json(
+      { reply },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      },
+    );
   } catch (error: any) {
     console.log(error);
     return NextResponse.json({ error: error.message });
