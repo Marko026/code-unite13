@@ -77,8 +77,6 @@ const Answers = ({ question, questionId, authorId }: Props) => {
         const editor = editorRef.current as any;
         editor.setContent(formatedAnswer);
       }
-
-      // TODO: Add the tost notification
     } catch (error) {
       console.log(error);
     } finally {

@@ -274,12 +274,11 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
     const userInteraction = await Interaction.find({ user: user._id })
       .populate("tags")
       .exec();
-
     const userTags = userInteraction.reduce((tags, interaction) => {
       tags = tags.concat(interaction.tags);
       return tags;
     }, []);
-
+    // @ts-ignore
     const distinctTags = [...new Set(userTags.map((tag: any) => tag._id))];
     const query: FilterQuery<typeof Questions> = {
       $and: [{ tags: { $in: distinctTags } }, { author: { $ne: user._id } }],
