@@ -280,8 +280,7 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
       return tags;
     }, []);
 
-    const distinctTags = [...new Set(userTags.map((tag) => tag._id))];
-
+    const distinctTags = [...new Set(userTags.map((tag: any) => tag._id))];
     const query: FilterQuery<typeof Questions> = {
       $and: [{ tags: { $in: distinctTags } }, { author: { $ne: user._id } }],
     };
