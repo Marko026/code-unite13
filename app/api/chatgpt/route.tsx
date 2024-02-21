@@ -5,6 +5,7 @@ export const POST = async (request: Request) => {
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
