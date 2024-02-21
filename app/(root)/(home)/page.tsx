@@ -19,10 +19,13 @@ export const metadata: Metadata = {
   title: "Home | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-  icons: {
-    icon: "/assets/images/opengraph-image.png",
-  },
   openGraph: {
+    images: {
+      url: "/assets/images/opengraph-image.png",
+      width: 470,
+      height: 270,
+      alt: "Og Image Alt",
+    },
     title: "Home | DevOverFlow",
     description:
       "A community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
