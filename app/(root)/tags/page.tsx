@@ -18,6 +18,9 @@ export const metadata: Metadata = {
     icon: "/assets/images/site-logo.svg",
   },
   openGraph: {
+    title: "Home | DevOverFlow",
+    description:
+      "A community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
     images: [{ url: "/assets/images/opengraph-image.png" }],
   },
 };
