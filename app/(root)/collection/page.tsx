@@ -8,10 +8,21 @@ import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination/page";
 import { Metadata } from "next";
+import ogImage from "@/assets/og/home.png";
 export const metadata: Metadata = {
   title: "Collections | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  openGraph: {
+    images: [
+      {
+        url: ogImage.src,
+        width: 1200,
+        height: 630,
+        alt: "DevFlow",
+      },
+    ],
+  },
 };
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
