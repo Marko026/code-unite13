@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "Community | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-  icons: "assets/images/opengraph-image.png",
+  icons: "/opengraph-image.png",
   openGraph: {
     title: "Community | DevOverFlow",
     url: "https://code-unite13.vercel.app/",
