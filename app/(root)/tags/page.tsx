@@ -8,7 +8,7 @@ import { getAllTags } from "@/lib/actions/tag.actions";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 import { Metadata } from "next";
-import ogImage from "@/assets/og/home.png";
+import ogImage from "../../opengraph-image.png";
 
 export const metadata: Metadata = {
   title: "Tags | DevOverFlow",

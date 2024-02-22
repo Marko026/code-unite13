@@ -14,7 +14,7 @@ import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination/page";
 import { Metadata } from "next";
-import ogImage from "@/assets/og/home.png";
+import ogImage from "../../opengraph-image.png";
 export const metadata: Metadata = {
   title: "Home | DevOverFlow",
   description:

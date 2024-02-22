@@ -7,7 +7,7 @@ import { UserFilters } from "@/constants/filters";
 import { getAllUsers } from "@/lib/actions/user.actions";
 import { SearchParamsProps } from "@/types";
 import { Metadata } from "next";
-import ogImage from "@/assets/og/home.png";
+import ogImage from "../../opengraph-image.png";
 export const metadata: Metadata = {
   title: "Community | DevOverFlow",
   description:

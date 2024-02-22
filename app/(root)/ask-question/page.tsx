@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 import { Metadata } from "next";
-import ogImage from "@/assets/og/home.png";
+import ogImage from "../../opengraph-image.png";
 
 export const metadata: Metadata = {
   title: "Ask Questions | DevOverFlow",
