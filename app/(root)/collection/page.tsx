@@ -13,22 +13,7 @@ export const metadata: Metadata = {
   title: "Collections | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-  icons: "/opengraph-image.png",
-  openGraph: {
-    title: "Collections | DevOverFlow",
-    url: "https://code-unite13.vercel.app/",
-    siteName: "DevOverFlow",
-    description:
-      "A community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-    images: [
-      {
-        url: "/opengraph-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Og Image",
-      },
-    ],
-  },
+  icons: "assets/images/site-logo.svg",
 };
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
