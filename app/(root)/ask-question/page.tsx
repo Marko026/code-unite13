@@ -3,6 +3,7 @@ import { getUserById } from "@/lib/actions/user.actions";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import React from "react";
+import ogImage from "../opengraph-image.png";
 
 import { Metadata } from "next";
 
@@ -10,6 +11,16 @@ export const metadata: Metadata = {
   title: "Ask Questions | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  openGraph: {
+    images: [
+      {
+        url: ogImage.src,
+        width: 1200,
+        height: 630,
+        alt: "DevOverflow",
+      },
+    ],
+  },
 };
 
 const AskQUestion = async () => {
