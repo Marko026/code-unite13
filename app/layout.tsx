@@ -6,6 +6,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Inter, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/context/ThemeProvider";
+import ogImage from "./opengraph-image.png";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,6 +24,16 @@ export const metadata: Metadata = {
   title: "DevFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  openGraph: {
+    images: [
+      {
+        url: ogImage.src,
+        width: 1200,
+        height: 630,
+        alt: "DevFlow",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
