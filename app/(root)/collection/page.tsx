@@ -12,6 +12,16 @@ export const metadata: Metadata = {
   title: "Collections | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
+  other: {
+    "twitter-image": "https://ibb.co/vcqjhGh",
+    "twitter-card": "summary_large_image",
+    "twitter-creator": "DevOverflow",
+    "twitter:image:alt": "DevOverflow logo",
+    "og:type": "website",
+    "og:url": "code-unite13.vercel.app",
+    "og:image": "https://ibb.co/vcqjhGh",
+    robots: "index,follow",
+  },
 };
 
 export default async function Collection({ searchParams }: SearchParamsProps) {
