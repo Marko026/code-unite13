@@ -5,22 +5,11 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 import { Metadata } from "next";
-import ogImage from "../../opengraph-image.png";
 
 export const metadata: Metadata = {
   title: "Ask Questions | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-  openGraph: {
-    images: [
-      {
-        url: ogImage.src,
-        width: 1200,
-        height: 630,
-        alt: "DevFlow",
-      },
-    ],
-  },
 };
 
 const AskQUestion = async () => {
