@@ -3,6 +3,17 @@ import Navbar from "@/components/shared/navbar/Navbar";
 import LeftSideBar from "@/components/shared/LeftSideBar";
 import RightSideBar from "@/components/shared/RightSideBar";
 import { Toaster } from "@/components/ui/toaster";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  openGraph: {
+    images: [
+      {
+        url: "https://i.ibb.co/ZfXMSPS/opengraph-image.png",
+      },
+    ],
+  },
+};
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

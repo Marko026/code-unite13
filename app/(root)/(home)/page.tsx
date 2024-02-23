@@ -18,17 +18,6 @@ export const metadata: Metadata = {
   title: "Home | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-
-  openGraph: {
-    title: "Home | DevOverFlow",
-    description:
-      "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-    images: [
-      {
-        url: "/opengraph-image.png",
-      },
-    ],
-  },
 };
 
 export default async function Home({ searchParams }: SearchParamsProps) {
