@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
     images: [
       {
-        url: "https://i.ibb.co/ZfXMSPS/opengraph-image.png",
+        url: "/opengraph-image.png",
       },
     ],
   },
