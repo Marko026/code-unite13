@@ -13,14 +13,6 @@ export const metadata: Metadata = {
   title: "Tags | DevOverFlow",
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
-  metadataBase: new URL("https://code-unite13.vercel.app/"),
-  alternates: {
-    canonical: "/",
-  },
-  icons: "/opengraph-image.png",
-  openGraph: {
-    images: "https://ibb.co/vcqjhGh",
-  },
 };
 
 const page = async ({ searchParams }: SearchParamsProps) => {
