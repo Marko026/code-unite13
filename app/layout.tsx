@@ -20,6 +20,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://code-unite13.vercel.app"),
   openGraph: {
     images: [
       {
