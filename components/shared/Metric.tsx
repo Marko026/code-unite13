@@ -23,23 +23,25 @@ const Metric = ({
 }: MetricProps) => {
   const metricContent = (
     <>
-      <Image
-        src={imgUrl}
-        alt={alt}
-        className={`mr-1 object-contain ${href ? "rounded-full" : ""}`}
-        width={16}
-        height={16}
-      />
-      <p className={`${textStyles} flex items-center gap-1`}>
-        {value}
-        <span
-          className={`small-regular line-clamp-1 ${
-            isAuthor ? "max-sm:hidden" : ""
-          }`}
-        >
-          {title}
-        </span>
-      </p>
+      <div className="flex items-center">
+        <Image
+          src={imgUrl}
+          alt={alt}
+          className={`mr-1 object-contain ${href ? "rounded-full" : ""} `}
+          width={20}
+          height={16}
+        />
+        <p className={`${textStyles} flex items-center gap-1`}>
+          {value}
+          <span
+            className={`small-regular line-clamp-1 ${
+              isAuthor ? "max-sm:hidden" : ""
+            }`}
+          >
+            {title}
+          </span>
+        </p>
+      </div>
     </>
   );
   if (href) {

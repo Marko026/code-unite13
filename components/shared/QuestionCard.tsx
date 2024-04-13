@@ -36,7 +36,7 @@ const QuestionCard = ({
   const showActionButtons = clerkId === author.clerkId;
 
   return (
-    <section className="background-light800_darkgradient relative mt-8 flex w-full flex-col space-y-6 rounded-xl p-9 shadow-md">
+    <section className="background-light800_darkgradient relative mt-8 flex w-full flex-col space-y-6 rounded-xl p-4 shadow-md sm:p-9">
       <span className="subtle-regular text-dark400_light700 hidden max-md:block">
         {getTimestamp(createdAt)}
       </span>
@@ -48,7 +48,7 @@ const QuestionCard = ({
           <RenderTag _id={tag._id} key={tag._id} name={tag.name} />
         ))}
       </div>
-      <div className=" flex w-full items-center justify-between gap-2">
+      <div className=" flex w-full flex-col items-start justify-between gap-2 sm:flex-row md:items-center">
         <Metric
           imgUrl={author.picture}
           alt="user"
@@ -56,22 +56,22 @@ const QuestionCard = ({
           title={`-asked ${getTimestamp(createdAt)}`}
           href={`/profile/${author._id}`}
           isAuthor
-          textStyles="body-meduim text-dark400_light700"
+          textStyles="body-medium text-dark400_light700"
         />
-        <div className="flex gap-4">
+        <div className="flex  gap-4">
           <Metric
             imgUrl="/assets/icons/like.svg"
             alt="upvotes"
             value={formatNumberWithExtension(upvotes.length)}
             title="Votes"
-            textStyles="small-meduim text-dark400_light800"
+            textStyles="small-medium text-dark400_light800"
           />
           <Metric
             imgUrl="/assets/icons/message.svg"
             alt="answers"
             value={formatNumberWithExtension(answers.length)}
             title="Answers"
-            textStyles="small-meduim text-dark400_light800"
+            textStyles="small-medium text-dark400_light800"
           />
           <Metric
             imgUrl="/assets/icons/eye.svg"
