@@ -20,14 +20,10 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  title: "DevOverFlow",
+  description:
+    "A community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
   metadataBase: new URL("https://code-unite13.vercel.app"),
-  openGraph: {
-    images: [
-      {
-        url: "https://i.ibb.co/ZfXMSPS/opengraph-image.png",
-      },
-    ],
-  },
 };
 export default function RootLayout({
   children,
