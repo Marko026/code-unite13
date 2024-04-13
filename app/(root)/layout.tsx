@@ -6,12 +6,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://code-unite13.vercel.app"),
+  title: "DevOverFlow",
+  description:
+    "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
   openGraph: {
-    images: [
-      {
-        url: "https://i.ibb.co/ZfXMSPS/opengraph-image.png",
-      },
-    ],
+    images: "/opengraph-image.jpeg",
+  },
+  twitter: {
+    images: "/opengraph-image.jpeg",
   },
 };
 
