@@ -11,10 +11,10 @@ export const metadata: Metadata = {
   description:
     "a community-driven platform for asking and answering questions about programming get help,share knowledge and colloborate with developers from around  the world ",
   openGraph: {
-    images: "/opengraph-image.jpeg",
+    images: "https://i.ibb.co/HKsJLxw/opengraph-image.png",
   },
   twitter: {
-    images: "/opengraph-image.jpeg",
+    images: "https://i.ibb.co/HKsJLxw/opengraph-image.png",
   },
 };
 
