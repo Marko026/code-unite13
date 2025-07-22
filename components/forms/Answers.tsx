@@ -1,6 +1,16 @@
 "use client";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 
+import { useTheme } from "@/context/ThemeProvider";
+import { createAnswer } from "@/lib/actions/answer.actions";
+import { AnswerSchema } from "@/lib/validation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Editor } from "@tinymce/tinymce-react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "../ui/button";
 import {
   Form,
   FormControl,
@@ -8,16 +18,6 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
-import { useForm } from "react-hook-form";
-import { AnswerSchema } from "@/lib/validation";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Editor } from "@tinymce/tinymce-react";
-import { useTheme } from "@/context/ThemeProvider";
-import { Button } from "../ui/button";
-import Image from "next/image";
-import { createAnswer } from "@/lib/actions/answer.actions";
-import { usePathname } from "next/navigation";
 interface Props {
   question: string;
   questionId: string;
@@ -64,13 +64,13 @@ const Answers = ({ question, questionId, authorId }: Props) => {
     if (!authorId) return;
     setIsSubmittingAi(true);
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
-        {
-          method: "POST",
-          body: JSON.stringify({ question }),
+      const response = await fetch("/api/chatgpt", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ question }),
+      });
       const aiAnswer = await response.json();
       const formatedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
       if (editorRef.current) {

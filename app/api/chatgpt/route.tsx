@@ -1,5 +1,17 @@
 import { NextResponse } from "next/server";
 
+// Handle CORS preflight request
+export const OPTIONS = async () => {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+};
+
 export const POST = async (request: Request) => {
   try {
     const { question } = await request.json();
@@ -8,7 +20,12 @@ export const POST = async (request: Request) => {
     if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
         { error: "OpenAI API key is not configured" },
-        { status: 500 },
+        {
+          status: 500,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        },
       );
     }
 
@@ -36,7 +53,12 @@ export const POST = async (request: Request) => {
         {
           error: `OpenAI API Error: ${errorData.error?.message || "Unknown error"}`,
         },
-        { status: response.status },
+        {
+          status: response.status,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        },
       );
     }
 
@@ -45,17 +67,34 @@ export const POST = async (request: Request) => {
     if (!responseData.choices || !responseData.choices[0]) {
       return NextResponse.json(
         { error: "No response from OpenAI" },
-        { status: 500 },
+        {
+          status: 500,
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+        },
       );
     }
 
     const reply = responseData.choices[0].message.content;
-    return NextResponse.json({ reply });
+    return NextResponse.json(
+      { reply },
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      },
+    );
   } catch (error: any) {
     console.error("API Route Error:", error);
     return NextResponse.json(
       { error: error.message || "Internal server error" },
-      { status: 500 },
+      {
+        status: 500,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      },
     );
   }
 };
