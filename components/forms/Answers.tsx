@@ -64,6 +64,10 @@ const Answers = ({ question, questionId, authorId }: Props) => {
   const generateAiAnswer = async () => {
     if (!authorId) return;
     setIsSubmittingAi(true);
+
+    // Clear browser storage to prevent quota exceeded errors
+    clearBrowserStorage();
+
     try {
       const result = await generateAIAnswer(question);
 
@@ -133,6 +137,15 @@ const Answers = ({ question, questionId, authorId }: Props) => {
                     init={{
                       height: 500,
                       menubar: false,
+                      // Disable storage to prevent quota exceeded errors
+                      browser_spellcheck: true,
+                      contextmenu: false,
+                      setup: (editor: any) => {
+                        // Disable automatic saving to localStorage
+                        editor.on("init", () => {
+                          editor.getBody().setAttribute("spellcheck", "false");
+                        });
+                      },
                       plugins: [
                         "advlist",
                         "autolink",
@@ -159,6 +172,9 @@ const Answers = ({ question, questionId, authorId }: Props) => {
                         "body { font-family:Inter, font-size:16px }",
                       skin: mode === "dark" ? "oxide-dark" : "oxide",
                       content_css: mode === "dark" ? "dark" : "light",
+                      // Prevent storage usage
+                      save_enablewhendirty: false,
+                      save_onsavecallback: null,
                     }}
                   />
                 </FormControl>
