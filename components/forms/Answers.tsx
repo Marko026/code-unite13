@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 
 import { useTheme } from "@/context/ThemeProvider";
 import { createAnswer } from "@/lib/actions/answer.actions";
+import { generateAIAnswer } from "@/lib/actions/chatgpt.action";
 import { AnswerSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
@@ -64,21 +65,20 @@ const Answers = ({ question, questionId, authorId }: Props) => {
     if (!authorId) return;
     setIsSubmittingAi(true);
     try {
-      const response = await fetch("/api/chatgpt", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ question }),
-      });
-      const aiAnswer = await response.json();
-      const formatedAnswer = aiAnswer.reply.replace(/\n/g, "<br />");
-      if (editorRef.current) {
-        const editor = editorRef.current as any;
-        editor.setContent(formatedAnswer);
+      const result = await generateAIAnswer(question);
+
+      if (result.success && result.reply) {
+        const formatedAnswer = result.reply.replace(/\n/g, "<br />");
+        if (editorRef.current) {
+          const editor = editorRef.current as any;
+          editor.setContent(formatedAnswer);
+        }
+      } else {
+        console.error("AI Answer Error:", result.error);
+        // Možeš dodati toast notifikaciju ovde
       }
     } catch (error) {
-      console.log(error);
+      console.error("Generate AI Answer Error:", error);
     } finally {
       setIsSubmittingAi(false);
     }
