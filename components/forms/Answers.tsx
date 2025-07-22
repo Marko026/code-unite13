@@ -19,6 +19,7 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/form";
+
 interface Props {
   question: string;
   questionId: string;
@@ -64,9 +65,6 @@ const Answers = ({ question, questionId, authorId }: Props) => {
   const generateAiAnswer = async () => {
     if (!authorId) return;
     setIsSubmittingAi(true);
-
-    // Clear browser storage to prevent quota exceeded errors
-    clearBrowserStorage();
 
     try {
       const result = await generateAIAnswer(question);
@@ -126,7 +124,8 @@ const Answers = ({ question, questionId, authorId }: Props) => {
             render={({ field }) => (
               <FormItem className="flex w-full flex-col gap-3">
                 <FormControl className="mt-3.5">
-                  <Editor
+                  <div className="relative">
+                    <Editor
                     apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                     onInit={(evt, editor) =>
                       // @ts-ignore
@@ -137,44 +136,31 @@ const Answers = ({ question, questionId, authorId }: Props) => {
                     init={{
                       height: 500,
                       menubar: false,
-                      // Disable storage to prevent quota exceeded errors
-                      browser_spellcheck: true,
+                      statusbar: false,
+                      branding: false,
+                      resize: false,
+                      // Minimal plugins to reduce storage usage
+                      plugins: ["lists", "link", "codesample", "autolink"],
+                      toolbar:
+                        "undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | codesample link",
+                      content_style:
+                        "body { font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; }",
+                      skin: mode === "dark" ? "oxide-dark" : "oxide",
+                      content_css: mode === "dark" ? "dark" : "default",
+                      // Disable all storage and caching
+                      cache_suffix: "?v=" + new Date().getTime(),
+                      browser_spellcheck: false,
                       contextmenu: false,
+                      elementpath: false,
+                      // Prevent any storage usage
                       setup: (editor: any) => {
-                        // Disable automatic saving to localStorage
                         editor.on("init", () => {
-                          editor.getBody().setAttribute("spellcheck", "false");
+                          // Disable any automatic storage
+                          if (editor.storage) {
+                            editor.storage.clear();
+                          }
                         });
                       },
-                      plugins: [
-                        "advlist",
-                        "autolink",
-                        "lists",
-                        "link",
-                        "image",
-                        "charmap",
-                        "anchor",
-                        "searchreplace",
-                        "visualblocks",
-                        "codesample",
-                        "fullscreen",
-                        "insertdatetime",
-                        "media",
-                        "table",
-                        "preview",
-                      ],
-                      toolbar:
-                        "undo redo | blocks |" +
-                        "codesample | bold italic forecolor | alignleft aligncenter " +
-                        "alignright alignjustify | bullist numlist | ",
-
-                      content_style:
-                        "body { font-family:Inter, font-size:16px }",
-                      skin: mode === "dark" ? "oxide-dark" : "oxide",
-                      content_css: mode === "dark" ? "dark" : "light",
-                      // Prevent storage usage
-                      save_enablewhendirty: false,
-                      save_onsavecallback: null,
                     }}
                   />
                 </FormControl>
