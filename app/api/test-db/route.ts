@@ -1,9 +1,9 @@
-import { connectToDB } from "@/lib/mongoose";
+import { connectToDataBase } from "@/lib/mongoose";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    await connectToDB();
+    await connectToDataBase();
     return NextResponse.json({
       success: true,
       message: "Database connection successful",

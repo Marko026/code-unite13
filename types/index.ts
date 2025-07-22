@@ -54,3 +54,26 @@ export type DeleteQuestionParams = {
   questionId: string;
   path: string;
 };
+
+// Error logging types
+export type ErrorType =
+  | "QUOTA_EXCEEDED"
+  | "CORS_ERROR"
+  | "API_ERROR"
+  | "TINYMCE_ERROR"
+  | "REACT_ERROR"
+  | "NETWORK_ERROR"
+  | "VALIDATION_ERROR"
+  | "UNKNOWN_ERROR";
+
+export interface ErrorLog {
+  timestamp: Date;
+  errorType: ErrorType;
+  message: string;
+  stackTrace?: string;
+  userAgent?: string;
+  url?: string;
+  userId?: string;
+  componentStack?: string;
+  additionalData?: Record<string, any>;
+}
