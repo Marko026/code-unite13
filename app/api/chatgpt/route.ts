@@ -214,6 +214,13 @@ Keep responses focused and well-formatted for web display.`
 
     const responseData = await aiResponse.json();
 
+    console.log("=== GROQ API RESPONSE ===");
+    console.log("Full response:", JSON.stringify(responseData, null, 2));
+    console.log("Response keys:", Object.keys(responseData));
+    console.log("Has choices:", !!responseData.choices);
+    console.log("Choices length:", responseData.choices?.length);
+    console.log("========================");
+
     if (!responseData.choices || !responseData.choices[0]) {
       console.error("No response from Groq API:", responseData);
       return NextResponse.json(
