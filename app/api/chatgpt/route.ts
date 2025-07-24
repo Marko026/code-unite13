@@ -212,17 +212,33 @@ Keep responses focused and well-formatted for web display.`
       );
     }
 
-    const responseData = await aiResponse.json();
+    let responseData;
+    try {
+      responseData = await aiResponse.json();
 
-    console.log("=== GROQ API RESPONSE ===");
-    console.log("Full response:", JSON.stringify(responseData, null, 2));
-    console.log("Response keys:", Object.keys(responseData));
-    console.log("Has choices:", !!responseData.choices);
-    console.log("Choices length:", responseData.choices?.length);
-    console.log("========================");
+      console.log("=== GROQ API RESPONSE ===");
+      console.log("Full response:", JSON.stringify(responseData, null, 2));
+      console.log("Response keys:", Object.keys(responseData));
+      console.log("Has choices:", !!responseData.choices);
+      console.log("Choices length:", responseData.choices?.length);
+      console.log("========================");
+    } catch (parseError) {
+      console.error("Failed to parse Groq response as JSON:", parseError);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid response from Groq API",
+          code: "INVALID_RESPONSE",
+        },
+        {
+          status: 502,
+          headers: corsHeaders,
+        },
+      );
+    }
 
     if (!responseData.choices || !responseData.choices[0]) {
-      console.error("No response from Groq API:", responseData);
+      console.error("No choices in Groq API response:", responseData);
       return NextResponse.json(
         {
           success: false,
@@ -236,7 +252,24 @@ Keep responses focused and well-formatted for web display.`
       );
     }
 
-    const reply = responseData.choices[0].message.content;
+    let reply;
+    try {
+      reply = responseData.choices[0].message.content;
+    } catch (accessError) {
+      console.error("Error accessing response content:", accessError);
+      console.error("Response structure:", responseData);
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Cannot read properties of undefined (reading '0')",
+          code: "RESPONSE_FORMAT_ERROR",
+        },
+        {
+          status: 502,
+          headers: corsHeaders,
+        },
+      );
+    }
 
     return NextResponse.json(
       {
