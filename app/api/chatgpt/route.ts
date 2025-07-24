@@ -54,6 +54,11 @@ export async function POST(
 ): Promise<NextResponse<ChatGPTResponse>> {
   const corsHeaders = getCorsHeaders(request);
 
+  // First thing - log that we entered the function
+  console.log("=== API ROUTE CALLED ===");
+  console.log("POST /api/chatgpt called at:", new Date().toISOString());
+  console.log("========================");
+
   try {
     // Parse and validate request body
     let body;
@@ -103,6 +108,24 @@ export async function POST(
     console.log("All Environment Variables:", Object.keys(process.env).filter(key => key.includes('GROQ')));
     console.log("Request Origin:", request.headers.get('origin'));
     console.log("Request URL:", request.url);
+
+    // Force return early to test if this code runs
+    if (!groqKey) {
+      console.log("GROQ_API_KEY is missing - returning early");
+      return NextResponse.json(
+        {
+          success: false,
+          error: "GROQ_API_KEY is not configured in production environment",
+          code: "MISSING_API_KEY",
+        },
+        {
+          status: 503,
+          headers: corsHeaders,
+        },
+      );
+    }
+
+    console.log("GROQ_API_KEY is available, proceeding with API call");
     console.log("========================");
 
     if (!groqKey) {
@@ -320,8 +343,10 @@ export async function GET(request: NextRequest) {
   return NextResponse.json(
     {
       success: false,
-      error: "Method not allowed",
+      error: "Method not allowed - TEST BUILD VERSION 2024",
       code: "METHOD_NOT_ALLOWED",
+      buildTest: "This message proves the new code is deployed",
+      timestamp: new Date().toISOString(),
     },
     {
       status: 405,
