@@ -17,21 +17,34 @@ interface ChatGPTResponse {
   code?: string;
 }
 
-// CORS headers configuration
-const corsHeaders = {
-  "Access-Control-Allow-Origin": process.env.NODE_ENV === 'production' 
-    ? "https://code-unite13.vercel.app" 
-    : "*",
+// CORS headers configuration - allow all Vercel domains
+const getAllowedOrigin = (request: NextRequest) => {
+  const origin = request.headers.get('origin');
+  
+  // Allow localhost for development
+  if (origin?.includes('localhost')) return origin;
+  
+  // Allow all Vercel app domains
+  if (origin?.includes('vercel.app')) return origin;
+  
+  // Allow your main domain
+  if (origin?.includes('code-unite13.vercel.app')) return origin;
+  
+  return "*";
+};
+
+const getCorsHeaders = (request: NextRequest) => ({
+  "Access-Control-Allow-Origin": getAllowedOrigin(request),
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Access-Control-Max-Age": "86400", // 24 hours
-};
+});
 
 // Handle preflight OPTIONS requests
-export async function OPTIONS() {
+export async function OPTIONS(request: NextRequest) {
   return new NextResponse(null, {
     status: 200,
-    headers: corsHeaders,
+    headers: getCorsHeaders(request),
   });
 }
 
@@ -39,6 +52,8 @@ export async function OPTIONS() {
 export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ChatGPTResponse>> {
+  const corsHeaders = getCorsHeaders(request);
+  
   try {
     // Parse and validate request body
     let body;
@@ -80,12 +95,25 @@ export async function POST(
     const groqKey = process.env.GROQ_API_KEY;
     const openaiKey = process.env.OPENAI_API_KEY;
     
+    // Debug logging for production
+    console.log("API Keys status:", {
+      hasGroq: !!groqKey,
+      hasOpenAI: !!openaiKey,
+      environment: process.env.NODE_ENV
+    });
+    
     if (!groqKey && !openaiKey) {
       console.error("No AI API key is configured");
+      console.error("Environment check:", {
+        NODE_ENV: process.env.NODE_ENV,
+        hasGroqKey: !!process.env.GROQ_API_KEY,
+        hasOpenAIKey: !!process.env.OPENAI_API_KEY
+      });
+      
       return NextResponse.json(
         {
           success: false,
-          error: "AI service is not configured",
+          error: "AI service is not configured. Please add GROQ_API_KEY or OPENAI_API_KEY to environment variables.",
           code: "SERVICE_UNAVAILABLE",
         },
         {
