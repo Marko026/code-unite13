@@ -94,11 +94,16 @@ export async function POST(
     // Check for Groq API key
     const groqKey = process.env.GROQ_API_KEY;
 
-    // Debug logging for production
-    console.log("Groq API Key status:", {
-      hasGroq: !!groqKey,
-      environment: process.env.NODE_ENV
-    });
+    // Enhanced debug logging for production
+    console.log("=== GROQ API DEBUG INFO ===");
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("Has Groq Key:", !!groqKey);
+    console.log("Groq Key Length:", groqKey ? groqKey.length : 0);
+    console.log("Groq Key Prefix:", groqKey ? groqKey.substring(0, 10) + "..." : "undefined");
+    console.log("All Environment Variables:", Object.keys(process.env).filter(key => key.includes('GROQ')));
+    console.log("Request Origin:", request.headers.get('origin'));
+    console.log("Request URL:", request.url);
+    console.log("========================");
 
     if (!groqKey) {
       console.error("Groq API key is not configured");
@@ -126,6 +131,11 @@ export async function POST(
     const model = "llama-3.1-8b-instant";
 
     // Call AI API
+    console.log("=== MAKING GROQ API CALL ===");
+    console.log("API URL:", apiUrl);
+    console.log("Model:", model);
+    console.log("Question length:", question.length);
+
     const aiResponse = await fetch(apiUrl, {
       method: "POST",
       headers: {
@@ -161,6 +171,10 @@ Keep responses focused and well-formatted for web display.`
         temperature: 0.7,
       }),
     });
+
+    console.log("Groq API Response Status:", aiResponse.status);
+    console.log("Groq API Response Headers:", Object.fromEntries(aiResponse.headers.entries()));
+    console.log("========================");
 
     if (!aiResponse.ok) {
       let errorMessage = "Unknown error";
