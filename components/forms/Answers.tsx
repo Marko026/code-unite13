@@ -132,15 +132,44 @@ const Answers = ({ question, questionId, authorId }: Props) => {
       const data = result.data;
 
       if (data && data.success && data.reply) {
-        const formatedAnswer = data.reply.replace(/\n/g, "<br />");
+        // Enhanced formatting for better presentation
+        const formatAIResponse = (text: string) => {
+          return text
+            // Remove excessive line breaks (more than 2 consecutive)
+            .replace(/\n{3,}/g, '\n\n')
+            // Convert double line breaks to paragraph breaks
+            .replace(/\n\n/g, '</p><p>')
+            // Convert single line breaks to <br> but avoid in code blocks
+            .replace(/\n/g, '<br>')
+            // Wrap in paragraph tags
+            .replace(/^/, '<p>')
+            .replace(/$/, '</p>')
+            // Fix empty paragraphs
+            .replace(/<p><\/p>/g, '')
+            // Better code block formatting
+            .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
+            // Inline code formatting
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            // Bold text formatting
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            // Italic text formatting
+            .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+            // Clean up excessive spacing
+            .replace(/<br>\s*<br>/g, '<br>')
+            // Remove trailing breaks before closing paragraphs
+            .replace(/<br><\/p>/g, '</p>');
+        };
 
         if (useFallback) {
-          // For fallback textarea, use plain text
-          const plainTextAnswer = data.reply;
+          // For fallback textarea, use clean plain text
+          const plainTextAnswer = data.reply
+            .replace(/\n{3,}/g, '\n\n')
+            .trim();
           form.setValue("answer", plainTextAnswer);
         } else if (editorRef.current) {
           const editor = editorRef.current as any;
-          editor.setContent(formatedAnswer);
+          const formattedAnswer = formatAIResponse(data.reply);
+          editor.setContent(formattedAnswer);
         }
 
         // Show success message
@@ -154,7 +183,19 @@ const Answers = ({ question, questionId, authorId }: Props) => {
         throw new Error(data?.error || "Failed to generate AI answer");
       }
     } catch (error: any) {
-      const errorMessage = error.message || "Failed to generate AI answer";
+      let errorMessage = error.message || "Failed to generate AI answer";
+      
+      // Handle specific error types with user-friendly messages
+      if (error.message && error.message.includes("quota")) {
+        errorMessage = "AI service quota exceeded. Please try again later or contact support.";
+      } else if (error.message && error.message.includes("429")) {
+        errorMessage = "AI service is temporarily unavailable due to high usage. Please try again later.";
+      } else if (error.message && error.message.includes("invalid_api_key")) {
+        errorMessage = "AI service configuration error. Please contact support.";
+      } else if (error.message && error.message.includes("network")) {
+        errorMessage = "Network connection error. Please check your internet connection and try again.";
+      }
+      
       console.error("Generate AI Answer Error:", error);
       setAiError(errorMessage);
 
@@ -364,19 +405,7 @@ const Answers = ({ question, questionId, authorId }: Props) => {
                         onFallback={field.onChange}
                         onError={handleEditorError}
                       >
-                        {/* Debug button for editability issues */}
-                        <div className="mb-2 flex justify-end">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={ensureEditorEditable}
-                            className="text-xs opacity-50 hover:opacity-100"
-                            title="Click if editor seems read-only or unresponsive"
-                          >
-                            Fix Editor
-                          </Button>
-                        </div>
+
                         <Editor
                           apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                           onInit={(_, editor) => {
@@ -399,8 +428,37 @@ const Answers = ({ question, questionId, authorId }: Props) => {
                             plugins: ["lists", "link", "paste", "textcolor"],
                             toolbar:
                               "undo redo | bold italic underline | forecolor | bullist numlist | link | removeformat",
-                            content_style:
-                              "body { font-family: Inter, Arial, sans-serif; font-size: 16px; line-height: 1.6; }",
+                            content_style: `
+                              body { 
+                                font-family: Inter, Arial, sans-serif; 
+                                font-size: 16px; 
+                                line-height: 1.6; 
+                              }
+                              p { 
+                                margin-bottom: 12px; 
+                                margin-top: 0; 
+                              }
+                              p:last-child { 
+                                margin-bottom: 0; 
+                              }
+                              code { 
+                                background-color: #f4f4f4; 
+                                padding: 2px 6px; 
+                                border-radius: 4px; 
+                                font-family: 'Courier New', monospace; 
+                                font-size: 14px; 
+                              }
+                              pre { 
+                                background-color: #f8f8f8; 
+                                padding: 12px; 
+                                border-radius: 6px; 
+                                overflow-x: auto; 
+                                margin: 12px 0; 
+                              }
+                              strong { 
+                                font-weight: 600; 
+                              }
+                            `,
                             skin: mode === "dark" ? "oxide-dark" : "oxide",
                             content_css: mode === "dark" ? "dark" : "default",
                             // Ensure paste functionality works properly

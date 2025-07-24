@@ -19,7 +19,9 @@ interface ChatGPTResponse {
 
 // CORS headers configuration
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*", // In production, replace with specific domain
+  "Access-Control-Allow-Origin": process.env.NODE_ENV === 'production' 
+    ? "https://code-unite13.vercel.app" 
+    : "*",
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
   "Access-Control-Max-Age": "86400", // 24 hours
@@ -74,9 +76,12 @@ export async function POST(
 
     const { question } = validationResult.data;
 
-    // Check for OpenAI API key
-    if (!process.env.OPENAI_API_KEY) {
-      console.error("OpenAI API key is not configured");
+    // Check for API keys (try Groq first, fallback to OpenAI)
+    const groqKey = process.env.GROQ_API_KEY;
+    const openaiKey = process.env.OPENAI_API_KEY;
+    
+    if (!groqKey && !openaiKey) {
+      console.error("No AI API key is configured");
       return NextResponse.json(
         {
           success: false,
@@ -90,48 +95,74 @@ export async function POST(
       );
     }
 
-    // Call OpenAI API
-    const openAIResponse = await fetch(
-      "https://api.openai.com/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: "You are a helpful assistant." },
-            { role: "user", content: question },
-          ],
-          max_tokens: 1000,
-          temperature: 0.7,
-        }),
-      },
-    );
+    // Use Groq if available (faster and free), otherwise OpenAI
+    const useGroq = !!groqKey;
+    const apiUrl = useGroq 
+      ? "https://api.groq.com/openai/v1/chat/completions"
+      : "https://api.openai.com/v1/chat/completions";
+    
+    const apiKey = useGroq ? groqKey : openaiKey;
+    const model = useGroq ? "llama-3.1-8b-instant" : "gpt-3.5-turbo";
 
-    if (!openAIResponse.ok) {
+    // Call AI API
+    const aiResponse = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { 
+            role: "system", 
+            content: `You are a professional programming assistant for a developer Q&A platform. 
+
+FORMATTING RULES:
+- Write in a professional, conversational tone
+- Use proper sentence case (not ALL CAPS)
+- Keep paragraphs concise (2-3 sentences max)
+- Use bullet points for lists, not excessive line breaks
+- Include code examples when relevant
+- Be direct and helpful without being overly verbose
+
+RESPONSE STRUCTURE:
+- Start with a brief, direct answer
+- Provide explanation if needed
+- Include code example if applicable
+- End with any additional tips or considerations
+
+Keep responses focused and well-formatted for web display.` 
+          },
+          { role: "user", content: question },
+        ],
+        max_tokens: 1000,
+        temperature: 0.7,
+      }),
+    });
+
+    if (!aiResponse.ok) {
       let errorMessage = "Unknown error";
-      let errorCode = "OPENAI_ERROR";
+      let errorCode = "AI_ERROR";
 
       try {
-        const errorData = await openAIResponse.json();
+        const errorData = await aiResponse.json();
         errorMessage = errorData.error?.message || errorMessage;
 
-        // Map specific OpenAI error types
-        if (errorData.error?.type === "insufficient_quota") {
+        // Map specific error types
+        if (errorData.error?.type === "insufficient_quota" || aiResponse.status === 429) {
           errorCode = "QUOTA_EXCEEDED";
-        } else if (errorData.error?.type === "invalid_api_key") {
+        } else if (errorData.error?.type === "invalid_api_key" || aiResponse.status === 401) {
           errorCode = "INVALID_API_KEY";
         }
       } catch (parseError) {
-        console.error("Failed to parse OpenAI error response:", parseError);
+        console.error("Failed to parse AI error response:", parseError);
       }
 
       console.error(
-        `OpenAI API Error (${openAIResponse.status}):`,
+        `AI API Error (${aiResponse.status}):`,
         errorMessage,
+        `Using ${useGroq ? 'Groq' : 'OpenAI'}`
       );
 
       return NextResponse.json(
@@ -141,16 +172,16 @@ export async function POST(
           code: errorCode,
         },
         {
-          status: openAIResponse.status >= 500 ? 503 : 400,
+          status: aiResponse.status >= 500 ? 503 : 400,
           headers: corsHeaders,
         },
       );
     }
 
-    const responseData = await openAIResponse.json();
+    const responseData = await aiResponse.json();
 
     if (!responseData.choices || !responseData.choices[0]) {
-      console.error("No response from OpenAI:", responseData);
+      console.error("No response from AI service:", responseData);
       return NextResponse.json(
         {
           success: false,

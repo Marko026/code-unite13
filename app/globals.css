@@ -142,6 +142,70 @@ code {
 }
 /* Markdown End */
 
+/* AI Response Formatting */
+.ai-response {
+  line-height: 1.6;
+  font-size: 16px;
+}
+
+.ai-response p {
+  margin-bottom: 12px;
+  margin-top: 0;
+}
+
+.ai-response p:last-child {
+  margin-bottom: 0;
+}
+
+.ai-response code {
+  background-color: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.ai-response pre {
+  background-color: #f8f8f8;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 12px 0;
+}
+
+.ai-response pre code {
+  background: none;
+  padding: 0;
+}
+
+.ai-response strong {
+  font-weight: 600;
+  color: #2d3748;
+}
+
+.ai-response em {
+  font-style: italic;
+  color: #4a5568;
+}
+
+/* Dark mode AI response */
+.dark .ai-response code {
+  background-color: #2d3748;
+  color: #e2e8f0;
+}
+
+.dark .ai-response pre {
+  background-color: #1a202c;
+}
+
+.dark .ai-response strong {
+  color: #f7fafc;
+}
+
+.dark .ai-response em {
+  color: #cbd5e0;
+}
+
 /* Clerk */
 .cl-internal-b3fm6y {
   background: linear-gradient(129deg, #ff7000 0%, #e2995f 100%) !important;
