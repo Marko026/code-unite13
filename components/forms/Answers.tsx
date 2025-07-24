@@ -117,13 +117,29 @@ const Answers = ({ question, questionId, authorId }: Props) => {
   const generateAiAnswer = async () => {
     if (!authorId) return;
 
+    // Debug circuit breaker status
+    console.log("=== GENERATE AI ANSWER DEBUG ===");
+    console.log("isCircuitBreakerOpen:", isCircuitBreakerOpen);
+    console.log("canRetryAPI:", canRetryAPI);
+    console.log("isSubmittingAi:", isSubmittingAi);
+    console.log("authorId:", authorId);
+    console.log("================================");
+
+    if (isCircuitBreakerOpen) {
+      console.log("Circuit breaker is open, cannot make API call");
+      setAiError("Service temporarily unavailable due to previous failures. Please wait and try again.");
+      return;
+    }
+
     setIsSubmittingAi(true);
     setAiError(null);
     setAiSuccess(false);
 
     try {
       // Use the enhanced API client with advanced retry mechanism
+      console.log("Making API call to chatGPTAPI.generateAnswer with question:", question.substring(0, 100) + "...");
       const result = await chatGPTAPI.generateAnswer(question);
+      console.log("API call result:", result);
 
       if (!result.success) {
         throw new Error(result.error || "Failed to generate AI answer");
