@@ -137,9 +137,16 @@ const Answers = ({ question, questionId, authorId }: Props) => {
 
     try {
       // Use the enhanced API client with advanced retry mechanism
-      console.log("Making API call to chatGPTAPI.generateAnswer with question:", question.substring(0, 100) + "...");
+      console.log("=== STARTING API CALL ===");
+      console.log("Question:", question.substring(0, 100) + "...");
+      console.log("chatGPTAPI object:", chatGPTAPI);
+      console.log("About to call chatGPTAPI.generateAnswer...");
+      
       const result = await chatGPTAPI.generateAnswer(question);
-      console.log("API call result:", result);
+      
+      console.log("=== API CALL COMPLETED ===");
+      console.log("Result:", result);
+      console.log("========================");
 
       if (!result.success) {
         throw new Error(result.error || "Failed to generate AI answer");
@@ -199,6 +206,12 @@ const Answers = ({ question, questionId, authorId }: Props) => {
         throw new Error(data?.error || "Failed to generate AI answer");
       }
     } catch (error: any) {
+      console.log("=== ERROR CAUGHT ===");
+      console.error("Full error object:", error);
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+      console.log("==================");
+      
       let errorMessage = error.message || "Failed to generate AI answer";
       
       // Handle specific error types with user-friendly messages
@@ -280,7 +293,14 @@ const Answers = ({ question, questionId, authorId }: Props) => {
         </h4>
 
         <Button
-          onClick={generateAiAnswer}
+          onClick={() => {
+            console.log("=== BUTTON CLICKED ===");
+            console.log("isSubmittingAi:", isSubmittingAi);
+            console.log("isCircuitBreakerOpen:", isCircuitBreakerOpen);
+            console.log("Button disabled:", isSubmittingAi || isCircuitBreakerOpen);
+            console.log("===================");
+            generateAiAnswer();
+          }}
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5 text-primary-500 shadow-none"
           disabled={isSubmittingAi || isCircuitBreakerOpen}
           title={
