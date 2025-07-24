@@ -1,66 +1,55 @@
 # Implementation Plan
 
-- [x] 1. Diagnose current circuit breaker state and reset if needed
+- [ ] 1. Remove OpenAI dependencies from API route
+  - Remove all OpenAI-related code and variables from `/api/chatgpt/route.ts`
+  - Simplify environment variable validation to only check for GROQ_API_KEY
+  - Remove OpenAI fallback logic and related conditional statements
+  - Update error messages to remove OpenAI references
+  - _Requirements: 1.1, 5.5_
 
+- [ ] 2. Fix CORS headers bug in API route
+  - Fix undefined `corsHeaders` variable in GET method handler
+  - Ensure all HTTP methods have proper CORS headers
+  - Test CORS functionality for both development and production domains
+  - _Requirements: 5.4_
 
+- [ ] 3. Simplify Groq-only API implementation
+  - Remove conditional logic for choosing between Groq and OpenAI
+  - Hardcode Groq API endpoint and model configuration
+  - Simplify API key validation to only require GROQ_API_KEY
+  - Update logging to reflect Groq-only usage
+  - _Requirements: 1.1, 1.5, 5.1_
 
+- [ ] 4. Update error handling for Groq-specific scenarios
+  - Map Groq-specific error codes to appropriate responses
+  - Update error messages to be Groq-specific
+  - Ensure proper handling of Groq rate limits and quotas
+  - Test error scenarios with invalid Groq API key
+  - _Requirements: 2.1, 2.2, 2.3_
 
-  - Check localStorage for circuit breaker state data
-  - Examine error logs in browser console
-  - Reset circuit breaker state manually if stuck
-  - _Requirements: 1.3, 2.1, 4.3_
+- [ ] 5. Clean up environment configuration
+  - Remove OPENAI_API_KEY from environment variable documentation
+  - Verify GROQ_API_KEY is properly configured in production
+  - Update any configuration files or documentation that reference OpenAI
+  - _Requirements: 5.2, 5.5_
 
+- [ ] 6. Test AI generation functionality with Groq only
+  - Test AI answer generation with various question types
+  - Verify proper response formatting and display in TinyMCE editor
+  - Test loading states and user feedback during API calls
+  - Confirm circuit breaker functionality works with Groq API
+  - _Requirements: 1.1, 1.2, 1.3, 1.4_
 
-- [ ] 2. Validate OpenAI API configuration and connectivity
-  - Verify OPENAI_API_KEY is correctly set in environment
-  - Test API key validity with a simple OpenAI API call
-  - Check API route accessibility and request format
-  - _Requirements: 1.1, 1.5, 4.3_
+- [ ] 7. Verify production deployment functionality
+  - Deploy changes to Vercel and test in production environment
+  - Verify environment variables are accessible in production
+  - Test CORS functionality with deployed domain
+  - Confirm end-to-end AI generation works in production
+  - _Requirements: 5.1, 5.2, 5.3, 5.4_
 
-- [ ] 3. Create diagnostic utility for testing AI generation
-  - Implement a test function to directly call OpenAI API
-  - Add debugging information to API route responses
-  - Create manual circuit breaker reset functionality
-  - _Requirements: 2.1, 4.1, 4.5_
-
-- [x] 4. Fix immediate API connectivity issues
-
-
-
-
-  - Resolve any configuration problems found in step 2
-  - Update API route error handling if needed
-  - Ensure proper request validation and formatting
-
-
-
-  - _Requirements: 1.1, 1.2, 3.1_
-
-- [ ] 5. Enhance error reporting and user feedback
-  - Improve error messages to be more specific and actionable
-  - Add better circuit breaker state visibility in UI
-  - Implement proper error categorization (network, auth, quota, etc.)
-
-
-  - _Requirements: 2.1, 2.2, 2.3, 2.4_
-
-- [ ] 6. Test and verify AI generation functionality
-  - Test AI generation with various question types
-
-  - Verify error handling for different failure scenarios
-  - Confirm circuit breaker behavior and recovery
-  - _Requirements: 1.1, 1.2, 3.1, 3.2_
-
-- [x] 7. Implement circuit breaker management improvements
-
-
-  - Add manual reset capability in UI
-  - Make circuit breaker thresholds configurable
-  - Improve state monitoring and logging
-  - _Requirements: 2.4, 4.2, 4.4_
-
-- [ ] 8. Add comprehensive error logging and monitoring
-  - Enhance error tracking with more detailed context
-  - Add success/failure rate monitoring
-  - Implement better diagnostic information collection
-  - _Requirements: 4.1, 4.2, 4.3_
+- [ ] 8. Add enhanced logging and monitoring for Groq integration
+  - Add detailed logging for Groq API calls and responses
+  - Implement success/failure rate tracking for Groq API
+  - Add diagnostic information for troubleshooting Groq issues
+  - Ensure proper error context is logged for debugging
+  - _Requirements: 4.1, 4.2, 4.3, 4.5_

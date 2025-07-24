@@ -2,25 +2,29 @@
 
 ## Overview
 
-The AI generation feature is failing due to a circuit breaker being in CLOSED state, which prevents API calls to OpenAI. The error message "Service Status: CLOSED" indicates that the system has detected multiple failures and has temporarily disabled the service to prevent cascading failures.
+The AI generation feature needs to be migrated from OpenAI to Groq API exclusively. The current implementation has both Groq and OpenAI support with fallback logic, but we want to remove all OpenAI dependencies and ensure the application works properly when deployed to production using only Groq.
 
-## Root Cause Analysis
+## Migration Strategy
 
-### Circuit Breaker Pattern
-The application uses a circuit breaker pattern implemented in the retry mechanism. When too many API calls fail (default threshold: 5 failures), the circuit breaker opens and blocks further requests for a reset timeout period (default: 60 seconds).
+### Current State Analysis
+The existing API route already supports Groq as the primary AI service, but includes OpenAI as a fallback. We need to:
+1. Remove OpenAI fallback logic completely
+2. Fix a small bug in the CORS headers
+3. Ensure proper error handling for Groq-only implementation
+4. Verify deployment compatibility
 
-### Potential Causes
-1. **OpenAI API Key Issues**: Invalid, expired, or quota-exceeded API key
-2. **Network Connectivity**: Connection issues to OpenAI API
-3. **API Rate Limiting**: Exceeding OpenAI rate limits
-4. **Malformed Requests**: Invalid request format or parameters
-5. **OpenAI Service Outage**: Temporary unavailability of OpenAI services
+### Key Changes Required
+1. **Remove OpenAI Dependencies**: Eliminate all OpenAI-related code and environment variable checks
+2. **Simplify API Logic**: Use only Groq API without fallback mechanisms
+3. **Fix CORS Bug**: Resolve the undefined `corsHeaders` variable in the GET method
+4. **Update Error Messages**: Remove OpenAI-specific error references
+5. **Environment Cleanup**: Remove OPENAI_API_KEY dependency
 
 ## Architecture
 
-### Current Flow
+### Updated Flow
 ```
-User Click → generateAiAnswer() → chatGPTAPI.generateAnswer() → /api/chatgpt → OpenAI API
+User Click → generateAiAnswer() → chatGPTAPI.generateAnswer() → /api/chatgpt → Groq API
                                         ↓
                               Circuit Breaker Check
                                         ↓
@@ -30,43 +34,57 @@ User Click → generateAiAnswer() → chatGPTAPI.generateAnswer() → /api/chatg
 ### Components Involved
 1. **Answers.tsx**: UI component with generate button
 2. **apiClient.ts**: API client with circuit breaker
-3. **app/api/chatgpt/route.ts**: Next.js API route
+3. **app/api/chatgpt/route.ts**: Next.js API route (to be simplified)
 4. **fetchWithErrorTracking.ts**: Retry mechanism with circuit breaker
 5. **useRetryStatus.ts**: Hook for monitoring circuit breaker state
 
-## Diagnostic Strategy
+### API Route Simplification
+The current API route will be simplified to:
+- Remove OpenAI fallback logic
+- Use only Groq API configuration
+- Simplify environment variable checks
+- Fix CORS headers bug
+- Update error messages to be Groq-specific
 
-### Phase 1: Circuit Breaker State Investigation
-- Check current circuit breaker state in localStorage
-- Examine failure logs and error patterns
-- Verify circuit breaker configuration
+## Implementation Strategy
 
-### Phase 2: API Connectivity Testing
-- Test OpenAI API key validity
-- Verify API endpoint accessibility
-- Check request/response format
+### Phase 1: Code Cleanup
+- Remove all OpenAI-related code from API route
+- Fix CORS headers bug in GET method
+- Simplify environment variable validation
+- Update error messages and logging
 
-### Phase 3: Configuration Validation
-- Validate environment variables
-- Check API route implementation
-- Verify request validation logic
+### Phase 2: Groq-Only Implementation
+- Ensure Groq API integration is robust
+- Test Groq API connectivity and error handling
+- Verify proper model configuration (llama-3.1-8b-instant)
+- Update system prompts if needed
 
-## Error Handling Improvements
+### Phase 3: Deployment Verification
+- Test in production environment
+- Verify environment variables are properly set
+- Confirm CORS configuration works with deployed domain
+- Validate end-to-end functionality
 
-### Enhanced Error Messages
-- Specific error codes for different failure types
-- User-friendly messages for common issues
-- Diagnostic information for developers
+## Error Handling Strategy
 
-### Circuit Breaker Management
-- Manual reset capability
-- Configurable thresholds
-- Better state visibility
+### Groq-Specific Error Handling
+- Handle Groq API rate limits and quotas
+- Provide clear error messages for Groq service issues
+- Map Groq error codes to user-friendly messages
+- Maintain existing circuit breaker functionality
 
-### Retry Logic
-- Exponential backoff with jitter
-- Different retry strategies for different error types
-- Graceful degradation
+### Production Considerations
+- Ensure proper error logging for debugging
+- Handle network connectivity issues gracefully
+- Provide fallback behavior when Groq is unavailable
+- Maintain user experience during temporary failures
+
+### CORS and Deployment
+- Fix CORS headers for all HTTP methods
+- Ensure proper domain configuration for Vercel deployment
+- Handle preflight requests correctly
+- Support both development and production environments
 
 ## Testing Strategy
 
@@ -85,16 +103,21 @@ User Click → generateAiAnswer() → chatGPTAPI.generateAnswer() → /api/chatg
 - User experience validation
 - Cross-browser compatibility
 
-## Implementation Plan
+## Technical Specifications
 
-### Immediate Fixes
-1. Reset circuit breaker state
-2. Validate OpenAI API key
-3. Test API connectivity
-4. Fix any configuration issues
+### API Route Changes
+- Remove `openaiKey` variable and related logic
+- Simplify environment variable validation to only check `GROQ_API_KEY`
+- Fix `corsHeaders` undefined error in GET method
+- Update error messages to remove OpenAI references
+- Simplify API configuration to use only Groq endpoints
 
-### Long-term Improvements
-1. Enhanced error reporting
-2. Better circuit breaker management
-3. Improved user feedback
-4. Monitoring and alerting
+### Environment Variables
+- Required: `GROQ_API_KEY`
+- Remove dependency on: `OPENAI_API_KEY`
+- Maintain existing Clerk, MongoDB, and other service configurations
+
+### Model Configuration
+- Use `llama-3.1-8b-instant` model from Groq
+- Maintain existing system prompt and parameters
+- Keep current token limits and temperature settings

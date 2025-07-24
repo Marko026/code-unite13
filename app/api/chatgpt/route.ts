@@ -20,16 +20,16 @@ interface ChatGPTResponse {
 // CORS headers configuration - allow all Vercel domains
 const getAllowedOrigin = (request: NextRequest) => {
   const origin = request.headers.get('origin');
-  
+
   // Allow localhost for development
   if (origin?.includes('localhost')) return origin;
-  
+
   // Allow all Vercel app domains
   if (origin?.includes('vercel.app')) return origin;
-  
+
   // Allow your main domain
   if (origin?.includes('code-unite13.vercel.app')) return origin;
-  
+
   return "*";
 };
 
@@ -53,7 +53,7 @@ export async function POST(
   request: NextRequest,
 ): Promise<NextResponse<ChatGPTResponse>> {
   const corsHeaders = getCorsHeaders(request);
-  
+
   try {
     // Parse and validate request body
     let body;
@@ -91,29 +91,26 @@ export async function POST(
 
     const { question } = validationResult.data;
 
-    // Check for API keys (try Groq first, fallback to OpenAI)
+    // Check for Groq API key
     const groqKey = process.env.GROQ_API_KEY;
-    const openaiKey = process.env.OPENAI_API_KEY;
-    
+
     // Debug logging for production
-    console.log("API Keys status:", {
+    console.log("Groq API Key status:", {
       hasGroq: !!groqKey,
-      hasOpenAI: !!openaiKey,
       environment: process.env.NODE_ENV
     });
-    
-    if (!groqKey && !openaiKey) {
-      console.error("No AI API key is configured");
+
+    if (!groqKey) {
+      console.error("Groq API key is not configured");
       console.error("Environment check:", {
         NODE_ENV: process.env.NODE_ENV,
-        hasGroqKey: !!process.env.GROQ_API_KEY,
-        hasOpenAIKey: !!process.env.OPENAI_API_KEY
+        hasGroqKey: !!process.env.GROQ_API_KEY
       });
-      
+
       return NextResponse.json(
         {
           success: false,
-          error: "AI service is not configured. Please add GROQ_API_KEY or OPENAI_API_KEY to environment variables.",
+          error: "AI service is not configured. Please add GROQ_API_KEY to environment variables.",
           code: "SERVICE_UNAVAILABLE",
         },
         {
@@ -123,14 +120,10 @@ export async function POST(
       );
     }
 
-    // Use Groq if available (faster and free), otherwise OpenAI
-    const useGroq = !!groqKey;
-    const apiUrl = useGroq 
-      ? "https://api.groq.com/openai/v1/chat/completions"
-      : "https://api.openai.com/v1/chat/completions";
-    
-    const apiKey = useGroq ? groqKey : openaiKey;
-    const model = useGroq ? "llama-3.1-8b-instant" : "gpt-3.5-turbo";
+    // Use Groq API
+    const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+    const apiKey = groqKey;
+    const model = "llama-3.1-8b-instant";
 
     // Call AI API
     const aiResponse = await fetch(apiUrl, {
@@ -142,8 +135,8 @@ export async function POST(
       body: JSON.stringify({
         model,
         messages: [
-          { 
-            role: "system", 
+          {
+            role: "system",
             content: `You are a professional programming assistant for a developer Q&A platform. 
 
 FORMATTING RULES:
@@ -160,7 +153,7 @@ RESPONSE STRUCTURE:
 - Include code example if applicable
 - End with any additional tips or considerations
 
-Keep responses focused and well-formatted for web display.` 
+Keep responses focused and well-formatted for web display.`
           },
           { role: "user", content: question },
         ],
@@ -188,15 +181,14 @@ Keep responses focused and well-formatted for web display.`
       }
 
       console.error(
-        `AI API Error (${aiResponse.status}):`,
-        errorMessage,
-        `Using ${useGroq ? 'Groq' : 'OpenAI'}`
+        `Groq API Error (${aiResponse.status}):`,
+        errorMessage
       );
 
       return NextResponse.json(
         {
           success: false,
-          error: `AI service error: ${errorMessage}`,
+          error: `Groq API error: ${errorMessage}`,
           code: errorCode,
         },
         {
@@ -209,11 +201,11 @@ Keep responses focused and well-formatted for web display.`
     const responseData = await aiResponse.json();
 
     if (!responseData.choices || !responseData.choices[0]) {
-      console.error("No response from AI service:", responseData);
+      console.error("No response from Groq API:", responseData);
       return NextResponse.json(
         {
           success: false,
-          error: "No response from AI service",
+          error: "No response from Groq API",
           code: "NO_RESPONSE",
         },
         {
@@ -236,7 +228,7 @@ Keep responses focused and well-formatted for web display.`
       },
     );
   } catch (error: any) {
-    console.error("ChatGPT API Route Error:", error);
+    console.error("Groq API Route Error:", error);
 
     // Handle specific error types
     let errorMessage = "Internal server error";
@@ -248,7 +240,7 @@ Keep responses focused and well-formatted for web display.`
       statusCode = 408;
       errorCode = "TIMEOUT";
     } else if (error.code === "ENOTFOUND" || error.code === "ECONNREFUSED") {
-      errorMessage = "Unable to connect to AI service";
+      errorMessage = "Unable to connect to Groq API";
       statusCode = 503;
       errorCode = "CONNECTION_ERROR";
     }
@@ -268,7 +260,9 @@ Keep responses focused and well-formatted for web display.`
 }
 
 // Handle unsupported methods
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const corsHeaders = getCorsHeaders(request);
+
   return NextResponse.json(
     {
       success: false,

@@ -2,21 +2,21 @@
 
 ## Introduction
 
-The AI question/answer generation feature in DevOverFlow is currently failing with a "Service Status: CLOSED" error message. This indicates that the circuit breaker has been triggered due to repeated API failures, preventing users from generating AI-powered answers. The system shows "Unexpected Error" with a "Try Again" button, but the service remains unavailable. This feature is critical for helping users get quick, intelligent responses to programming questions.
+The AI question/answer generation feature in DevOverFlow needs to be migrated from OpenAI to Groq API and ensure it works properly when deployed. The current implementation has OpenAI as a fallback, but we want to completely remove OpenAI dependencies and use only Groq for AI generation. The system should work reliably in production deployment on Vercel.
 
 ## Requirements
 
 ### Requirement 1
 
-**User Story:** As a developer using DevOverFlow, I want to be able to generate AI-powered answers to questions so that I can get intelligent suggestions and save time writing responses.
+**User Story:** As a developer using DevOverFlow, I want to be able to generate AI-powered answers to questions using Groq API so that I can get intelligent suggestions and save time writing responses.
 
 #### Acceptance Criteria
 
-1. WHEN I click the "Generate AI Answer" button THEN the system SHALL make a successful API call to OpenAI
+1. WHEN I click the "Generate AI Answer" button THEN the system SHALL make a successful API call to Groq
 2. WHEN the API call is successful THEN the system SHALL display the generated answer in the TinyMCE editor
 3. WHEN the API call fails THEN the system SHALL display a clear error message explaining what went wrong
 4. WHEN I generate an AI answer THEN the system SHALL show a loading state during the API call
-5. IF the OpenAI API key is missing THEN the system SHALL display an appropriate configuration error message
+5. IF the Groq API key is missing THEN the system SHALL display an appropriate configuration error message
 
 ### Requirement 2
 
@@ -26,7 +26,7 @@ The AI question/answer generation feature in DevOverFlow is currently failing wi
 
 1. WHEN an API error occurs THEN the system SHALL log detailed error information to the console
 2. WHEN a network error occurs THEN the system SHALL display a user-friendly error message
-3. WHEN the OpenAI quota is exceeded THEN the system SHALL display a specific quota error message
+3. WHEN the Groq quota is exceeded THEN the system SHALL display a specific quota error message
 4. WHEN an error occurs THEN the system SHALL provide a retry button if the error is recoverable
 5. WHEN the circuit breaker is open THEN the system SHALL disable the generate button and show appropriate messaging
 
@@ -53,3 +53,15 @@ The AI question/answer generation feature in DevOverFlow is currently failing wi
 3. WHEN configuration issues exist THEN the system SHALL provide clear diagnostic information
 4. WHEN the service is unavailable THEN the system SHALL implement circuit breaker patterns
 5. WHEN debugging is needed THEN the system SHALL provide tools to test API connectivity
+
+### Requirement 5
+
+**User Story:** As a developer, I want the application to work properly when deployed to production so that users can access AI generation features reliably.
+
+#### Acceptance Criteria
+
+1. WHEN the application is deployed to Vercel THEN the Groq API integration SHALL work correctly
+2. WHEN environment variables are configured THEN they SHALL be accessible in the production environment
+3. WHEN users access the deployed application THEN AI generation SHALL function without OpenAI dependencies
+4. WHEN API routes are called in production THEN they SHALL handle CORS properly for the deployed domain
+5. WHEN the application starts THEN it SHALL only require Groq API key and not depend on OpenAI
