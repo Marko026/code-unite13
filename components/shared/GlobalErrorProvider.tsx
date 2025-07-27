@@ -62,7 +62,7 @@ export function GlobalErrorProvider({
             <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
               <div className="mb-4 text-center">
                 <svg
-                  className="mx-auto h-16 w-16 text-red-400"
+                  className="mx-auto size-16 text-red-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -81,8 +81,8 @@ export function GlobalErrorProvider({
               </h1>
 
               <p className="mb-6 text-center text-gray-600">
-                We're sorry, but something went wrong. Please refresh the page
-                or try again later.
+                We&apos;re sorry, but something went wrong. Please refresh the
+                page or try again later.
               </p>
 
               <div className="flex justify-center">

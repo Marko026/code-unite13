@@ -127,7 +127,9 @@ const Answers = ({ question, questionId, authorId }: Props) => {
 
     if (isCircuitBreakerOpen) {
       console.log("Circuit breaker is open, cannot make API call");
-      setAiError("Service temporarily unavailable due to previous failures. Please wait and try again.");
+      setAiError(
+        "Service temporarily unavailable due to previous failures. Please wait and try again.",
+      );
       return;
     }
 
@@ -141,9 +143,9 @@ const Answers = ({ question, questionId, authorId }: Props) => {
       console.log("Question:", question.substring(0, 100) + "...");
       console.log("chatGPTAPI object:", chatGPTAPI);
       console.log("About to call chatGPTAPI.generateAnswer...");
-      
+
       const result = await chatGPTAPI.generateAnswer(question);
-      
+
       console.log("=== API CALL COMPLETED ===");
       console.log("Result:", result);
       console.log("========================");
@@ -157,37 +159,40 @@ const Answers = ({ question, questionId, authorId }: Props) => {
       if (data && data.success && data.reply) {
         // Enhanced formatting for better presentation
         const formatAIResponse = (text: string) => {
-          return text
-            // Remove excessive line breaks (more than 2 consecutive)
-            .replace(/\n{3,}/g, '\n\n')
-            // Convert double line breaks to paragraph breaks
-            .replace(/\n\n/g, '</p><p>')
-            // Convert single line breaks to <br> but avoid in code blocks
-            .replace(/\n/g, '<br>')
-            // Wrap in paragraph tags
-            .replace(/^/, '<p>')
-            .replace(/$/, '</p>')
-            // Fix empty paragraphs
-            .replace(/<p><\/p>/g, '')
-            // Better code block formatting
-            .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
-            // Inline code formatting
-            .replace(/`([^`]+)`/g, '<code>$1</code>')
-            // Bold text formatting
-            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-            // Italic text formatting
-            .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-            // Clean up excessive spacing
-            .replace(/<br>\s*<br>/g, '<br>')
-            // Remove trailing breaks before closing paragraphs
-            .replace(/<br><\/p>/g, '</p>');
+          return (
+            text
+              // Remove excessive line breaks (more than 2 consecutive)
+              .replace(/\n{3,}/g, "\n\n")
+              // Convert double line breaks to paragraph breaks
+              .replace(/\n\n/g, "</p><p>")
+              // Convert single line breaks to <br> but avoid in code blocks
+              .replace(/\n/g, "<br>")
+              // Wrap in paragraph tags
+              .replace(/^/, "<p>")
+              .replace(/$/, "</p>")
+              // Fix empty paragraphs
+              .replace(/<p><\/p>/g, "")
+              // Better code block formatting
+              .replace(
+                /```(\w+)?\n([\s\S]*?)```/g,
+                '<pre><code class="language-$1">$2</code></pre>',
+              )
+              // Inline code formatting
+              .replace(/`([^`]+)`/g, "<code>$1</code>")
+              // Bold text formatting
+              .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+              // Italic text formatting
+              .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+              // Clean up excessive spacing
+              .replace(/<br>\s*<br>/g, "<br>")
+              // Remove trailing breaks before closing paragraphs
+              .replace(/<br><\/p>/g, "</p>")
+          );
         };
 
         if (useFallback) {
           // For fallback textarea, use clean plain text
-          const plainTextAnswer = data.reply
-            .replace(/\n{3,}/g, '\n\n')
-            .trim();
+          const plainTextAnswer = data.reply.replace(/\n{3,}/g, "\n\n").trim();
           form.setValue("answer", plainTextAnswer);
         } else if (editorRef.current) {
           const editor = editorRef.current as any;
@@ -211,20 +216,24 @@ const Answers = ({ question, questionId, authorId }: Props) => {
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
       console.log("==================");
-      
+
       let errorMessage = error.message || "Failed to generate AI answer";
-      
+
       // Handle specific error types with user-friendly messages
       if (error.message && error.message.includes("quota")) {
-        errorMessage = "AI service quota exceeded. Please try again later or contact support.";
+        errorMessage =
+          "AI service quota exceeded. Please try again later or contact support.";
       } else if (error.message && error.message.includes("429")) {
-        errorMessage = "AI service is temporarily unavailable due to high usage. Please try again later.";
+        errorMessage =
+          "AI service is temporarily unavailable due to high usage. Please try again later.";
       } else if (error.message && error.message.includes("invalid_api_key")) {
-        errorMessage = "AI service configuration error. Please contact support.";
+        errorMessage =
+          "AI service configuration error. Please contact support.";
       } else if (error.message && error.message.includes("network")) {
-        errorMessage = "Network connection error. Please check your internet connection and try again.";
+        errorMessage =
+          "Network connection error. Please check your internet connection and try again.";
       }
-      
+
       console.error("Generate AI Answer Error:", error);
       setAiError(errorMessage);
 
@@ -252,7 +261,8 @@ const Answers = ({ question, questionId, authorId }: Props) => {
     }
   };
 
-  // Function to ensure editor is editable
+  // Function to ensure editor is editable - currently unused but kept for potential future use
+  // eslint-disable-next-line no-unused-vars
   const ensureEditorEditable = () => {
     if (editorRef.current && !useFallback) {
       try {
@@ -297,7 +307,10 @@ const Answers = ({ question, questionId, authorId }: Props) => {
             console.log("=== BUTTON CLICKED ===");
             console.log("isSubmittingAi:", isSubmittingAi);
             console.log("isCircuitBreakerOpen:", isCircuitBreakerOpen);
-            console.log("Button disabled:", isSubmittingAi || isCircuitBreakerOpen);
+            console.log(
+              "Button disabled:",
+              isSubmittingAi || isCircuitBreakerOpen,
+            );
             console.log("===================");
             generateAiAnswer();
           }}
@@ -441,7 +454,6 @@ const Answers = ({ question, questionId, authorId }: Props) => {
                         onFallback={field.onChange}
                         onError={handleEditorError}
                       >
-
                         <Editor
                           apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                           onInit={(_, editor) => {

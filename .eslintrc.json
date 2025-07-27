@@ -1,3 +1,35 @@
 {
-	"extends": ["next/core-web-vitals", "standard", "plugin:tailwindcss/recommended", "prettier"]
+  "extends": [
+    "next/core-web-vitals",
+    "standard",
+    "plugin:tailwindcss/recommended",
+    "prettier"
+  ],
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/__tests__/**/*.{js,jsx,ts,tsx}",
+        "**/*.{test,spec}.{js,jsx,ts,tsx}"
+      ],
+      "env": {
+        "jest": true
+      },
+      "globals": {
+        "describe": "readonly",
+        "it": "readonly",
+        "test": "readonly",
+        "expect": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "beforeAll": "readonly",
+        "afterAll": "readonly",
+        "jest": "readonly"
+      }
+    }
+  ]
 }

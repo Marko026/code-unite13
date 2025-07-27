@@ -37,11 +37,15 @@ export interface ReactErrorDetails {
 }
 
 class ErrorLogger {
+  // eslint-disable-next-line no-use-before-define
   private static instance: ErrorLogger;
   private logs: ErrorLog[] = [];
   private maxLogs = 100; // Keep last 100 logs in memory
 
-  private constructor() {}
+  // eslint-disable-next-line no-useless-constructor
+  private constructor() {
+    // Private constructor for singleton pattern
+  }
 
   public static getInstance(): ErrorLogger {
     if (!ErrorLogger.instance) {
@@ -250,7 +254,7 @@ class ErrorLogger {
       // Calculate localStorage usage
       let localStorageSize = 0;
       for (const key in localStorage) {
-        if (localStorage.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(localStorage, key)) {
           localStorageSize += localStorage[key].length + key.length;
         }
       }
@@ -259,7 +263,7 @@ class ErrorLogger {
       // Calculate sessionStorage usage
       let sessionStorageSize = 0;
       for (const key in sessionStorage) {
-        if (sessionStorage.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(sessionStorage, key)) {
           sessionStorageSize += sessionStorage[key].length + key.length;
         }
       }
