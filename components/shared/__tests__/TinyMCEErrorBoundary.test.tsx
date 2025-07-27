@@ -153,7 +153,7 @@ describe("TinyMCEErrorBoundary Component", () => {
 
   it("should handle non-Error objects thrown", () => {
     const ThrowString = () => {
-      throw "String error";
+      throw new Error("String error");
     };
 
     render(
